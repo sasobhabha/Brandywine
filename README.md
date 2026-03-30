@@ -1,70 +1,109 @@
 <div align="center">
 
-  # Whisky 🥃 
-  *Wine but a bit stronger*
-  
-  ![](https://img.shields.io/github/actions/workflow/status/IsaacMarovitz/Whisky/SwiftLint.yml?style=for-the-badge)
-  [![](https://img.shields.io/discord/1115955071549702235?style=for-the-badge)](https://discord.gg/CsqAfs9CnM)
+# **Brandy 🥃**  
+### *Wine, but aged longer and made stronger.*
+
+![Build Status](https://img.shields.io/github/actions/workflow/status/sasobhabha/Brandywine/SwiftLint.yml?style=for-the-badge)
+[![Discord](https://img.shields.io/discord/1115955071549702235?style=for-the-badge)](https://discord.gg/CsqAfs9CnM)
+
 </div>
 
-## Maintenance Notice
+---
 
-[Whisky is no longer actively maintained](https://docs.getwhisky.app/maintenance-notice). Apps and games may break at any time.
+## **About Brandy**
 
+Brandy is an actively maintained continuation of the original **Whisky** project, which is now archived. The goal is to preserve the familiar macOS-native experience while modernizing the underlying technology stack.
+
+Brandy focuses on:
+
+- Updating Wine to newer upstream versions  
+- Integrating newer CrossOver components  
+- Tracking improvements in Apple’s Game Porting Toolkit  
+- Fixing compatibility issues that emerged after Whisky’s archival  
+- Improving performance, stability, and SwiftUI code quality  
+
+Brandy keeps the spirit of Whisky alive while pushing the project forward with long-term maintainability in mind.
+
+---
+
+## **What’s New in Brandy**
+
+Brandy introduces meaningful updates beyond a simple rename:
+
+- **Newer Wine builds** for better app and game compatibility  
+- **Updated CrossOver layers** to match current CodeWeavers improvements  
+- **Improved GPTK integration** for enhanced graphics performance  
+- **Refreshed SwiftUI codebase** with ongoing cleanup and modernization  
+- **More reliable bottle creation and management**  
+- **Fixes for broken Whisky features** caused by outdated dependencies  
+
+More enhancements will continue as Wine, CrossOver, and GPTK evolve.
+
+---
+
+## **Screenshots**
+
+### Familiar macOS-native UI  
 <img width="650" alt="Config" src="https://github.com/Whisky-App/Whisky/assets/42140194/d0a405e8-76ee-48f0-92b5-165d184a576b">
 
-Familiar UI that integrates seamlessly with macOS
-
+### Simple bottle creation and management  
 <div align="right">
   <img width="650" alt="New Bottle" src="https://github.com/Whisky-App/Whisky/assets/42140194/ed1a0d69-d8fb-442b-9330-6816ba8981ba">
-
-  One-click bottle creation and management
 </div>
 
+### Built‑in debugging tools  
 <img width="650" alt="debug" src="https://user-images.githubusercontent.com/42140194/229176642-57b80801-d29b-4123-b1c2-f3b31408ffc6.png">
 
-Debug and profile with ease
+---
+
+## **System Requirements**
+
+- **CPU:** Apple Silicon (M‑series)  
+- **OS:** macOS Sonoma 14.0 or later  
+- **Storage:** Sufficient space for bottles, prefixes, and game assets  
 
 ---
 
-Whisky provides a clean and easy to use graphical wrapper for Wine built in native SwiftUI. You can make and manage bottles, install and run Windows apps and games, and unlock the full potential of your Mac with no technical knowledge required. Whisky is built on top of CrossOver 22.1.1, and Apple's own `Game Porting Toolkit`.
+## **Installation**
 
-Translated on [Crowdin](https://crowdin.com/project/whisky).
-
----
-
-## System Requirements
-- CPU: Apple Silicon (M-series chips)
-- OS: macOS Sonoma 14.0 or later
-
-## Homebrew
-
-Whisky is on homebrew! Install with 
-`brew install --cask whisky`.
-
-## My game isn't working!
-
-Some games need special steps to get working. Check out the [wiki](https://github.com/IsaacMarovitz/Whisky/wiki/Game-Support).
+Homebrew support is planned for Brandy.  
+Until then, download the latest release from the Releases section.
 
 ---
 
-## Credits & Acknowledgments
+## **Game & App Compatibility**
 
-Whisky is possible thanks to the magic of several projects:
+Many Windows apps run out of the box. Some games may require:
 
-- [msync](https://github.com/marzent/wine-msync) by marzent
-- [DXVK-macOS](https://github.com/Gcenx/DXVK-macOS) by Gcenx and doitsujin
-- [MoltenVK](https://github.com/KhronosGroup/MoltenVK) by KhronosGroup
-- [Sparkle](https://github.com/sparkle-project/Sparkle) by sparkle-project
-- [SemanticVersion](https://github.com/SwiftPackageIndex/SemanticVersion) by SwiftPackageIndex
-- [swift-argument-parser](https://github.com/apple/swift-argument-parser) by Apple
-- [SwiftTextTable](https://github.com/scottrhoyt/SwiftyTextTable) by scottrhoyt
-- [CrossOver 22.1.1](https://www.codeweavers.com/crossover) by CodeWeavers and WineHQ
-- D3DMetal by Apple
+- DXVK configuration  
+- GPTK overrides  
+- Specific Wine versions  
+- Custom bottle settings  
 
-Special thanks to Gcenx, ohaiibuzzle, and Nat Brown for their support and contributions!
+A compatibility wiki will be added as Brandy evolves.
 
 ---
+
+## **Credits**
+
+Brandy builds on the foundation of Whisky and the broader Wine ecosystem.
+
+Major components include:
+
+- Wine & CrossOver  
+- DXVK‑macOS  
+- MoltenVK  
+- Sparkle  
+- SemanticVersion  
+- Swift Argument Parser  
+- SwiftTextTable  
+- Apple’s Game Porting Toolkit  
+
+Special thanks to the original Whisky contributors and the Wine community.
+
+---
+
+## **Support the Ecosystem**
 
 <table>
   <tr>
@@ -75,7 +114,7 @@ Special thanks to Gcenx, ohaiibuzzle, and Nat Brown for their support and contri
         </picture>
     </td>
     <td>
-        Whisky doesn't exist without CrossOver. Support the work of CodeWeavers using our <a href="https://www.codeweavers.com/store?ad=1010">affiliate link</a>.
+        Brandy relies heavily on CrossOver technologies. Supporting CodeWeavers helps the entire macOS Wine ecosystem grow.
     </td>
   </tr>
 </table>
