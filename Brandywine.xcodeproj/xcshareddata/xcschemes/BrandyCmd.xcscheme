@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6E40495129CCA19C006E3F1B"
-               BuildableName = "Whisky.app"
-               BlueprintName = "Whisky"
-               ReferencedContainer = "container:Whisky.xcodeproj">
+               BlueprintIdentifier = "6E70A4972A9A2197007799E9"
+               BuildableName = "BrandyCmd"
+               BlueprintName = "BrandyCmd"
+               ReferencedContainer = "container:Brandywine.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -38,17 +38,24 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES">
+      allowLocationSimulation = "YES"
+      viewDebuggingEnabled = "No">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6E40495129CCA19C006E3F1B"
-            BuildableName = "Whisky.app"
-            BlueprintName = "Whisky"
-            ReferencedContainer = "container:Whisky.xcodeproj">
+            BlueprintIdentifier = "6E70A4972A9A2197007799E9"
+            BuildableName = "BrandyCmd"
+            BlueprintName = "BrandyCmd"
+            ReferencedContainer = "container:Brandywine.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "list"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -60,10 +67,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6E40495129CCA19C006E3F1B"
-            BuildableName = "Whisky.app"
-            BlueprintName = "Whisky"
-            ReferencedContainer = "container:Whisky.xcodeproj">
+            BlueprintIdentifier = "6E70A4972A9A2197007799E9"
+            BuildableName = "BrandyCmd"
+            BlueprintName = "BrandyCmd"
+            ReferencedContainer = "container:Brandywine.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

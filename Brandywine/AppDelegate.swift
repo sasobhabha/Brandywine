@@ -18,9 +18,12 @@
 
 import Foundation
 import SwiftUI
+import WhiskyKit
+import SemanticVersion
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     @AppStorage("hasShownMoveToApplicationsAlert") private var hasShownMoveToApplicationsAlert = false
+    @AppStorage("showSetup") private var showSetup: Bool = false
 
     func application(_ application: NSApplication, open urls: [URL]) {
         // Test if automatic window tabbing is enabled
@@ -38,6 +41,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 NSApp.activate(ignoringOtherApps: true)
                 self.showAlertOnFirstLaunch()
                 self.hasShownMoveToApplicationsAlert = true
+            }
+        }
+        Task {
+            if WhiskyWineInstaller.isWhiskyWineInstalled() {
+                let (shouldUpdate, _) = await WhiskyWineInstaller.shouldUpdateWhiskyWine()
+                if shouldUpdate {
+                    WhiskyWineInstaller.uninstall()
+                    showSetup = true
+                }
             }
         }
     }

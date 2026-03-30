@@ -117,5 +117,5 @@ public class WhiskyWineInstaller {
 }
 
 struct WhiskyWineVersion: Codable {
-    var version: SemanticVersion = SemanticVersion(1, 0, 0)
+    var version: SemanticVersion = SemanticVersion(11, 5, 0)
 }

@@ -35,11 +35,26 @@ struct SparkleView: View {
 }
 
 // This view model class publishes when new updates can be checked by the user
-final class CheckForUpdatesViewModel: ObservableObject {
+final class CheckForUpdatesViewModel: ObservableObject, @unchecked Sendable {
     @Published var canCheckForUpdates = false
+    private var updater: SPUUpdater
+    private var timer: Timer?
 
     init(updater: SPUUpdater) {
-        updater.publisher(for: \.canCheckForUpdates)
-            .assign(to: &$canCheckForUpdates)
+        self.updater = updater
+        // Initial check
+        updateCanCheckForUpdates()
+        // Poll the updater's state
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.updateCanCheckForUpdates()
+        }
+    }
+    private func updateCanCheckForUpdates() {
+        Task { @MainActor [weak self] in
+            self?.canCheckForUpdates = self?.updater.canCheckForUpdates ?? false
+        }
+    }
+    deinit {
+        timer?.invalidate()
     }
 }

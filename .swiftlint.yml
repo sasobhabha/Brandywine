@@ -4,6 +4,11 @@ opt_in_rules:
 
 excluded:
   - .build
+  - Build
+  - Pods
+  - Carthage
+  - vendor
+  - WhiskyKit/.build
 
 file_header:
     severity: error
