@@ -38,6 +38,7 @@ struct WhiskyApp: App {
             ContentView(showSetup: $showSetup)
                 .frame(minWidth: ViewWidth.large, minHeight: 316)
                 .environmentObject(BottleVM.shared)
+                .tint(.brandAccent)
                 .onAppear {
                     NSWindow.allowsAutomaticWindowTabbing = false
 
@@ -49,6 +50,10 @@ struct WhiskyApp: App {
         // Don't ask me how this works, it just does
         .handlesExternalEvents(matching: ["{same path of URL?}"])
         .commands {
+            CommandGroup(replacing: .appInfo) {
+                // UI-only rename of the app menu title to "Brandy"
+                Text("Brandy")
+            }
             CommandGroup(after: .appInfo) {
                 SparkleView(updater: updaterController.updater)
             }
@@ -196,5 +201,31 @@ struct WhiskyApp: App {
         } catch {
             return
         }
+    }
+}
+
+// MARK: - Brand color support
+private extension Color {
+    /// App-specific brand accent color.
+    /// Looks for an asset named "BrandAccent"; falls back to system accent color if missing.
+    static var brandAccent: Color {
+        #if canImport(AppKit)
+        // macOS (AppKit)
+        if let nsColor = NSColor(named: NSColor.Name("BrandAccent")) {
+            return Color(nsColor)
+        } else {
+            return .accentColor
+        }
+        #elseif canImport(UIKit)
+        // iOS/iPadOS/tvOS (UIKit)
+        if let uiColor = UIColor(named: "BrandAccent") {
+            return Color(uiColor)
+        } else {
+            return .accentColor
+        }
+        #else
+        // Fallback
+        return .accentColor
+        #endif
     }
 }

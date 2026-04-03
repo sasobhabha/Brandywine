@@ -41,7 +41,20 @@ More enhancements will continue as Wine, CrossOver, and GPTK evolve.
 
 ---
 
-## **Screenshots**
+## **Popular Features & Troubleshooting**
+
+Brandy addresses many commonly requested features from the community:
+
+- **🎮 Controller/Gamepad Support** - Full support with MSYNC and Windows 11 configuration
+- **🔊 Audio Configuration** - PulseAudio, ALSA, and audio device optimization
+- **🎯 Custom Environment Variables** - Advanced Wine configuration for power users
+- **📦 Windows Feature Installation** - Easy .NET, Visual C++, and DirectX installation
+- **🚂 Steam Compatibility** - Optimized for Steam on Wine 11.5 with proper configuration
+- **⚙️ Advanced Performance Tuning** - DXVK, Metal, AVX, and CPU optimization
+
+For detailed guides on these features and troubleshooting, see **[POPULAR_FEATURES.md](./POPULAR_FEATURES.md)** and **[STEAM_COMPATIBILITY.md](./STEAM_COMPATIBILITY.md)**.
+
+---
 
 ### Familiar macOS-native UI  
 <img width="650" alt="Config" src="https://github.com/Whisky-App/Whisky/assets/42140194/d0a405e8-76ee-48f0-92b5-165d184a576b">
@@ -82,9 +95,16 @@ Many Windows apps run out of the box. Some games may require:
 
 A compatibility wiki will be added as Brandy evolves.
 
----
+## Steam Not Working?
 
+<<<<<<< HEAD
 ## **Credits**
+=======
+If Steam fails to launch with error code 0x3008, the solution is to enable Windows 11 VM configuration with MSYNC synchronization on Wine 11.5. See [STEAM_COMPATIBILITY.md](STEAM_COMPATIBILITY.md) for detailed instructions and automatic configuration options.
+
+---
+## Credits & Acknowledgments
+>>>>>>> d5a3fe83 (Your commit message)
 
 Brandy builds on the foundation of Whisky and the broader Wine ecosystem.
 

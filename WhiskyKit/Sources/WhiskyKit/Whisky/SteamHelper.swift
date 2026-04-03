@@ -34,14 +34,18 @@ public class SteamHelper {
     /// Derive the C: drive URL for a given bottle
     /// Attempts common Wine prefix layouts: <prefix>/drive_c
     private static func cDriveURL(for bottle: Bottle) -> URL {
-        // Try common properties in Bottle by name using key paths if available; fall back to guessing based on known layout.
-        // If Bottle exposes a 'prefix' or 'url'/'root' URL, append 'drive_c'.
-        // We prefer not to assume a specific property name; instead, attempt common ones using Mirror.
+        // Try common Bottle properties by name using key paths when available.
+        // Fall back to guessing common layouts.
+        // If a prefix or URL field exists, append "drive_c".
         let mirror = Mirror(reflecting: bottle)
         var baseURL: URL?
         for child in mirror.children {
             if let label = child.label {
-                if label == "prefix" || label == "url" || label == "root" || label == "prefixURL" || label == "bottleURL" {
+                if label == "prefix" ||
+                   label == "url" ||
+                   label == "root" ||
+                   label == "prefixURL" ||
+                   label == "bottleURL" {
                     if let url = child.value as? URL {
                         baseURL = url
                         break
@@ -49,7 +53,8 @@ public class SteamHelper {
                 }
             }
         }
-        // If we couldn't discover a base URL reflectively, fall back to the user's home directory (best-effort), which matches typical Whisky/Wine layout.
+        // If we could not discover a base URL reflectively, fall back to a best-effort path.
+        // This typically matches the Whisky/Wine layout under the user's home directory.
         let fallback = FileManager.default.homeDirectoryForCurrentUser
             .appending(path: ".local/share/whisky")
         let prefix = baseURL ?? fallback

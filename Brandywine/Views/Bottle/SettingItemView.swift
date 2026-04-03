@@ -1,5 +1,4 @@
-//
-//  Constants.swift
+//  SettingItemView.swift
 //  Whisky
 //
 //  This file is part of Whisky.
@@ -16,44 +15,17 @@
 //  If not, see https://www.gnu.org/licenses/.
 //
 
-import Foundation
-
-enum ViewWidth {
-    static let small: Double = 400
-    static let medium: Double = 500
-    static let large: Double = 600
-}
-
-/// Shared loading state used by bottle configuration views.
-public enum LoadingState {
-    case loading
-    case modifying
-    case success
-    case failed
-}
-
 import SwiftUI
 
-/// Minimal shared SettingItemView used as a fallback when the dedicated file isn't compiled into the target.
-public struct SettingItemView<Content: View>: View {
-    public let title: String.LocalizationValue
-    public let loadingState: LoadingState
-    @ViewBuilder public var content: () -> Content
+struct SettingItemView<Content: View>: View {
+    let title: String.LocalizationValue
+    let loadingState: LoadingState
+    @ViewBuilder var content: () -> Content
 
     @Namespace private var viewId
     @Namespace private var progressViewId
 
-    public init(
-        title: String.LocalizationValue,
-        loadingState: LoadingState,
-        @ViewBuilder content: @escaping () -> Content
-    ) {
-        self.title = title
-        self.loadingState = loadingState
-        self.content = content
-    }
-
-    public var body: some View {
+    var body: some View {
         HStack {
             Text(String(localized: title))
                 .multilineTextAlignment(.leading)
@@ -75,8 +47,7 @@ public struct SettingItemView<Content: View>: View {
                         .font(.caption).foregroundStyle(.red)
                         .multilineTextAlignment(.trailing)
                 }
-            }
-            .animation(.default, value: loadingState)
+            }.animation(.default, value: loadingState)
         }
     }
 }

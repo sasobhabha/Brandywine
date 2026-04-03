@@ -56,7 +56,6 @@
         8C2AEFC82AED79B700CB568F /* WhiskyKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8C2AEFC92AED79CD00CB568F /* WhiskyKit */; };
         8C2AEFCA2AED79CD00CB568F /* WhiskyKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8C2AEFC92AED79CD00CB568F /* WhiskyKit */; };
         8C73E1342AF472FC00B6FB45 /* ProgramMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C73E1332AF472FC00B6FB45 /* ProgramMenuView.swift */; };
-        8CB681E52AED7C6F0018D319 /* WhiskyKit in Resources */ = {isa = PBXBuildFile; fileRef = 8CB681E42AED7C6F0018D319 /* WhiskyKit */; };
         8CB681E72AED7CD00018D319 /* WhiskyKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8C2AEFC92AED79CD00CB568F /* WhiskyKit */; };
         AB0BCABD2B61036E00E21C31 /* RunningProcessesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0BCABC2B61036E00E21C31 /* RunningProcessesView.swift */; };
         DB696FC82AFAE5DA0037EB2F /* PinCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB696FC72AFAE5DA0037EB2F /* PinCreationView.swift */; };
@@ -193,7 +192,6 @@
                 8CB681E72AED7CD00018D319 /* WhiskyKit in Frameworks */,
                 6EFDF64C2AAE2DA800EF622F /* QuickLookThumbnailing.framework in Frameworks */,
                 6EFDF64E2AAE2DA800EF622F /* Quartz.framework in Frameworks */,
-                EB58FB542A499896002DC184 /* SemanticVersion in Frameworks */,
             );
             runOnlyForDeploymentPostprocessing = 0;
         };
@@ -543,7 +541,6 @@
             isa = PBXResourcesBuildPhase;
             buildActionMask = 2147483647;
             files = (
-                8CB681E52AED7C6F0018D319 /* WhiskyKit in Resources */,
                 6E40495D29CCA19C006E3F1B /* Preview Assets.xcassets in Resources */,
                 6EB58AC92AEACE5E00B1ED3F /* Localizable.xcstrings in Resources */,
                 6E40495A29CCA19C006E3F1B /* Assets.xcassets in Resources */,
@@ -780,7 +777,7 @@
                 ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
                 CODE_SIGN_ENTITLEMENTS = Brandywine/Brandywine.entitlements;
                 CODE_SIGN_IDENTITY = "Apple Development";
-                "CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+                "CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
                 CODE_SIGN_STYLE = Automatic;
                 COMBINE_HIDPI_IMAGES = YES;
                 CURRENT_PROJECT_VERSION = 43;
@@ -818,14 +815,14 @@
                 ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
                 ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
                 CODE_SIGN_ENTITLEMENTS = Brandywine/Brandywine.entitlements;
-                "CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
-                CODE_SIGN_STYLE = Manual;
+                CODE_SIGN_IDENTITY = "Apple Development";
+                "CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+                CODE_SIGN_STYLE = Automatic;
                 COMBINE_HIDPI_IMAGES = YES;
                 CURRENT_PROJECT_VERSION = 43;
                 DEAD_CODE_STRIPPING = YES;
                 DEVELOPMENT_ASSET_PATHS = "\"Brandywine/Preview Content\"";
-                DEVELOPMENT_TEAM = "";
-                "DEVELOPMENT_TEAM[sdk=macosx*]" = 92S3SG4PTH;
+                DEVELOPMENT_TEAM = 8PQR26VG3C;
                 ENABLE_HARDENED_RUNTIME = YES;
                 ENABLE_PREVIEWS = YES;
                 GENERATE_INFOPLIST_FILE = YES;
@@ -844,7 +841,6 @@
                 PRODUCT_BUNDLE_IDENTIFIER = com.sasobha.brandywine;
                 PRODUCT_NAME = "$(TARGET_NAME)";
                 PROVISIONING_PROFILE_SPECIFIER = "";
-                "PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = Brandywine;
                 SWIFT_EMIT_LOC_STRINGS = YES;
                 SWIFT_STRICT_CONCURRENCY = complete;
                 SWIFT_VERSION = 6.0;
@@ -944,7 +940,7 @@
                 ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
                 CODE_SIGN_ENTITLEMENTS = BrandyThumbnail/BrandyThumbnail.entitlements;
                 CODE_SIGN_IDENTITY = "Apple Development";
-                "CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+                "CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
                 CODE_SIGN_STYLE = Automatic;
                 CURRENT_PROJECT_VERSION = 43;
                 DEAD_CODE_STRIPPING = YES;
@@ -1089,6 +1085,7 @@
             isa = XCSwiftPackageProductDependency;
             package = 6E95F6712AB3F67200D585D1 /* XCRemoteSwiftPackageReference "Progress" */;
             productName = Progress;
+        };
         8C2AEFC92AED79CD00CB568F /* WhiskyKit */ = {
             isa = XCSwiftPackageProductDependency;
             package = 8C2AEFC62AED79B700CB568F /* XCLocalSwiftPackageReference "WhiskyKit" */;
