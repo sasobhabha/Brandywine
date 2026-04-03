@@ -20,13 +20,8 @@ import SwiftUI
 import WhiskyKit
 
 struct WhiskyWineDownloadView: View {
-    @State private var fractionProgress: Double = 0
-    @State private var completedBytes: Int64 = 0
-    @State private var totalBytes: Int64 = 0
-    @State private var downloadSpeed: Double = 0
-    @State private var downloadTask: URLSessionDownloadTask?
-    @State private var observation: NSKeyValueObservation?
-    @State private var startTime: Date?
+    @State private var isReady: Bool = false
+    @State private var statusMessage: String = "Preparing bundled Wine libraries..."
     @Binding var tarLocation: URL
     @Binding var path: [SetupStage]
     var body: some View {
@@ -35,29 +30,18 @@ struct WhiskyWineDownloadView: View {
                 Text("setup.whiskywine.download")
                     .font(.title)
                     .fontWeight(.bold)
-                Text("setup.whiskywine.download.subtitle")
+                Text("Downloading Wine 11.0 libraries")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer()
-                VStack {
-                    ProgressView(value: fractionProgress, total: 1)
-                    HStack {
-                        HStack {
-                            Text(String(format: String(localized: "setup.whiskywine.progress"),
-                                        formatBytes(bytes: completedBytes),
-                                        formatBytes(bytes: totalBytes)))
-                            + Text(String(" "))
-                            + (shouldShowEstimate() ?
-                               Text(String(format: String(localized: "setup.whiskywine.eta"),
-                                           formatRemainingTime(remainingBytes: totalBytes - completedBytes)))
-                               : Text(String()))
-                            Spacer()
-                        }
-                        .font(.subheadline)
-                        .monospacedDigit()
-                    }
+                VStack(spacing: 12) {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                    Text(statusMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal)
+                .padding()
                 Spacer()
             }
             Spacer()
@@ -65,60 +49,31 @@ struct WhiskyWineDownloadView: View {
         .frame(width: 400, height: 200)
         .onAppear {
             Task {
-                if let url: URL = URL(string: "https://dl.winehq.org/wine-builds/macosx/wine-stable-11.5.tar.gz") {
-                    downloadTask = URLSession(configuration: .ephemeral).downloadTask(with: url) { url, _, _ in
-                        Task.detached {
-                            await MainActor.run {
-                                if let url = url {
-                                    tarLocation = url
-                                    proceed()
-                                }
-                            }
-                        }
-                    }
-                    observation = downloadTask?.observe(\.countOfBytesReceived) { task, _ in
-                        Task {
-                            await MainActor.run {
-                                let currentTime = Date()
-                                let elapsedTime = currentTime.timeIntervalSince(startTime ?? currentTime)
-                                if completedBytes > 0 {
-                                    downloadSpeed = Double(completedBytes) / elapsedTime
-                                }
-                                totalBytes = task.countOfBytesExpectedToReceive
-                                completedBytes = task.countOfBytesReceived
-                                fractionProgress = Double(completedBytes) / Double(totalBytes)
-                            }
-                        }
-                    }
-                    startTime = Date()
-                    downloadTask?.resume()
+                await MainActor.run {
+                    statusMessage = "Fetching Wine 11.0 libraries..."
                 }
+                let downloadURLString = "https://github.com/frankea/Whisky/releases/download/v3.0.0/Libraries.tar.gz"
+                guard let url = URL(string: downloadURLString) else {
+                    await MainActor.run {
+                        statusMessage = "Failed to download Wine libraries."
+                    }
+                    return
+                }
+                let session = URLSession(configuration: .ephemeral)
+                let downloadTask = session.downloadTask(with: url) { downloadURL, _, _ in
+                    Task {
+                        await MainActor.run {
+                            if let downloadURL = downloadURL {
+                                tarLocation = downloadURL
+                                proceed()
+                            } else {
+                                statusMessage = "Failed to download Wine libraries."
+                            }
+                        }
+                    }
+                }
+                downloadTask.resume()
             }
-        }
-    }
-
-    func formatBytes(bytes: Int64) -> String {
-        let formatter = ByteCountFormatter()
-        formatter.countStyle = .file
-        formatter.zeroPadsFractionDigits = true
-        return formatter.string(fromByteCount: bytes)
-    }
-
-    func shouldShowEstimate() -> Bool {
-        let elapsedTime = Date().timeIntervalSince(startTime ?? Date())
-        return Int(elapsedTime.rounded()) > 5 && completedBytes != 0
-    }
-
-    func formatRemainingTime(remainingBytes: Int64) -> String {
-        let remainingTimeInSeconds = Double(remainingBytes) / downloadSpeed
-
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute, .second]
-        formatter.unitsStyle = .full
-        if shouldShowEstimate() {
-            return formatter.string(from: TimeInterval(remainingTimeInSeconds)) ?? ""
-        } else {
-            return ""
         }
     }
 

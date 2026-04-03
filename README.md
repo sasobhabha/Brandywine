@@ -47,12 +47,17 @@ Brandy addresses many commonly requested features from the community:
 
 - **🎮 Controller/Gamepad Support** - Full support with MSYNC and Windows 11 configuration
 - **🔊 Audio Configuration** - PulseAudio, ALSA, and audio device optimization
+- **🎮 Controller/Gamepad Support** - Full support with MSYNC and Windows 11 configuration
+- **🔊 Audio Configuration** - PulseAudio, ALSA, and audio device optimization
 - **🎯 Custom Environment Variables** - Advanced Wine configuration for power users
 - **📦 Windows Feature Installation** - Easy .NET, Visual C++, and DirectX installation
 - **🚂 Steam Compatibility** - Optimized for Steam on Wine 11.5 with proper configuration
 - **⚙️ Advanced Performance Tuning** - DXVK, Metal, AVX, and CPU optimization
 
-For detailed guides on these features and troubleshooting, see **[POPULAR_FEATURES.md](./POPULAR_FEATURES.md)** and **[STEAM_COMPATIBILITY.md](./STEAM_COMPATIBILITY.md)**.
+For detailed guides on these features, troubleshooting, and community-requested Wine features, see:
+- **[WINE_FEATURES_GUIDE.md](./WINE_FEATURES_GUIDE.md)** - Comprehensive Wine feature guide (13 features with setup instructions)
+- **[POPULAR_FEATURES.md](./POPULAR_FEATURES.md)** - Popular feature guides and troubleshooting
+- **[STEAM_COMPATIBILITY.md](./STEAM_COMPATIBILITY.md)** - Steam-specific optimization
 
 ---
 
