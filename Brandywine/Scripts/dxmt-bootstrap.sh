@@ -1,6 +1,8 @@
 #!/bin/sh
 # DXVK prefix bootstrap (POSIX sh)
 # Creates WINEPREFIX if missing and adds idempotent DLL overrides
+# DXMT prefix bootstrap (POSIX sh)
+# Creates WINEPREFIX if missing and adds idempotent DLL overrides
 set -eu
 
 # Default WINEPREFIX if not provided
@@ -52,5 +54,5 @@ set_override "dxgi" "native,builtin"
 set_override "d3d10core" "native,builtin"
 set_override "d3d9" "native,builtin"
 
-echo "DXVK prefix bootstrap complete."
+echo "DXMT prefix bootstrap complete."
 exit 0

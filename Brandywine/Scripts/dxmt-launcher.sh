@@ -1,30 +1,29 @@
 #!/bin/sh
-# DXVK launcher (POSIX sh)
-# Exports WINEDLLPATH and DYLD_FALLBACK_LIBRARY_PATH pointing to Contents/Resources/dxvk-macos
-# Launches wine with provided arguments and logs DXVK load failures
+# DXMT launcher (POSIX sh)
+# Exports WINEDLLPATH and DYLD_FALLBACK_LIBRARY_PATH pointing to Contents/Resources/dxmt
 set -eu
 
 # Determine executable dir (this script will be copied into Contents/MacOS)
 SCRIPT_DIR=$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd)
-# DXVK dir inside the .app bundle
-DXVK_DIR="$SCRIPT_DIR/../Resources/dxvk-macos"
+# DXMT dir inside the .app bundle
+DXMT_DIR="$SCRIPT_DIR/../Resources/dxmt"
 
-export WINEDLLPATH="$DXVK_DIR"
+export WINEDLLPATH="$DXMT_DIR"
 # Prepend to DYLD_FALLBACK_LIBRARY_PATH if set, else set new
 if [ -n "${DYLD_FALLBACK_LIBRARY_PATH:-}" ]; then
-  export DYLD_FALLBACK_LIBRARY_PATH="$DXVK_DIR:$DYLD_FALLBACK_LIBRARY_PATH"
+  export DYLD_FALLBACK_LIBRARY_PATH="$DXMT_DIR:$DYLD_FALLBACK_LIBRARY_PATH"
 else
-  export DYLD_FALLBACK_LIBRARY_PATH="$DXVK_DIR"
+  export DYLD_FALLBACK_LIBRARY_PATH="$DXMT_DIR"
 fi
 
 # Default WINEPREFIX if not provided
 WINEPREFIX=${WINEPREFIX:-"$HOME/Library/Application Support/Brandywine/Prefix"}
 export WINEPREFIX
 
-# Log file for DXVK diagnostics
+# Log file for DXMT diagnostics
 LOG_DIR="$HOME/Library/Logs/Brandywine"
 mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/dxvk-launcher.log"
+LOG_FILE="$LOG_DIR/dxmt-launcher.log"
 
 # Choose wine binary
 if [ -n "${BRANDYWINE_WINE_PATH:-}" ]; then
@@ -35,7 +34,7 @@ else
   WINE_BIN="wine"
 fi
 
-echo "DXVK launcher starting. DXVK_DIR=$DXVK_DIR" >> "$LOG_FILE"
+echo "DXMT launcher starting. DXMT_DIR=$DXMT_DIR" >> "$LOG_FILE"
 
 echo "WINEDLLPATH=$WINEDLLPATH" >> "$LOG_FILE"
 echo "DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH" >> "$LOG_FILE"
@@ -51,8 +50,8 @@ else
   RET=$?
   echo "Wine exited with code $RET" >> "$LOG_FILE"
   # Check for common DXVK failure indicators in log and print summary
-  if grep -Eiq "dxvk|failed to load|d3d|vulkan|DXVK|cannot open shared object file" "$LOG_FILE"; then
-    echo "[DXVK] Potential DXVK load failures detected. See $LOG_FILE for details." >&2
+  if grep -Eiq "dxmt|dxvk|failed to load|d3d|vulkan|DXVK|cannot open shared object file" "$LOG_FILE"; then
+    echo "[DXMT] Potential DXMT/DXVK load failures detected. See $LOG_FILE for details." >&2
   fi
   exit $RET
 fi

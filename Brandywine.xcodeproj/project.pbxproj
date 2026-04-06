@@ -107,7 +107,7 @@
             name = "Embed Foundation Extensions";
             runOnlyForDeploymentPostprocessing = 0;
         };
-        6E70A49C2A9A2197007799E9 /* DXVK: Install launcher & set perms */ = {
+        6E70A49C2A9A2197007799E9 /* DXMT: Install launcher & set perms */ = {
             isa = PBXShellScriptBuildPhase;
             alwaysOutOfDate = 0;
             buildActionMask = 2147483647;
@@ -117,14 +117,14 @@
             );
             inputPaths = (
             );
-            name = "DXVK: Install launcher & set perms";
+            name = "DXMT: Install launcher & set perms";
             outputFileListPaths = (
             );
             outputPaths = (
             );
             runOnlyForDeploymentPostprocessing = 0;
             shellPath = /bin/sh;
-            shellScript = "set -e\n# Locate built .app bundle using BUILT_PRODUCTS_DIR and WRAPPER_NAME\nAPP_BUNDLE=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\"\nAPP_BIN_DIR=\"$APP_BUNDLE/Contents/MacOS\"\nDXVK_RES=\"$APP_BUNDLE/Contents/Resources/dxvk-macos\"\n# Export environment variables for consumers at build-time (also provided at runtime by launcher)\nexport WINEDLLPATH=\"$DXVK_RES\"\nexport DYLD_FALLBACK_LIBRARY_PATH=\"$DXVK_RES\"\n# Install launcher into app bundle and make executable\nmkdir -p \"$APP_BIN_DIR\"\ncp \"${PROJECT_DIR}/Brandywine/Scripts/dxvk-launcher.sh\" \"$APP_BIN_DIR/Brandywine-dxvk\"\nchmod +x \"$APP_BIN_DIR/Brandywine-dxvk\"\n";
+            shellScript = "set -e\n# Locate built .app bundle using BUILT_PRODUCTS_DIR and WRAPPER_NAME\nAPP_BUNDLE=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\"\nAPP_BIN_DIR=\"$APP_BUNDLE/Contents/MacOS\"\nDXMT_RES=\"$APP_BUNDLE/Contents/Resources/dxmt\"\n# Export environment variables for consumers at build-time (also provided at runtime by launcher)\nexport WINEDLLPATH=\"$DXMT_RES\"\nexport DYLD_FALLBACK_LIBRARY_PATH=\"$DXMT_RES\"\n# Install launcher into app bundle and make executable\nmkdir -p \"$APP_BIN_DIR\"\ncp \"${PROJECT_DIR}/Brandywine/Scripts/dxmt-launcher.sh\" \"$APP_BIN_DIR/Brandywine-dxmt\"\nchmod +x \"$APP_BIN_DIR/Brandywine-dxmt\"\n";
         };
 /* End PBXCopyFilesBuildPhase section */
 
