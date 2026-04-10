@@ -14,7 +14,7 @@
         63FFDE862ADF0C7700178665 /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FFDE852ADF0C7700178665 /* BottomBar.swift */; };
         6763D8F62BC6314100651D27 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6763D8F52BC6314100651D27 /* Constants.swift */; };
         67D278512BC5907E006F9A1E /* ActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D278502BC5907E006F9A1E /* ActionView.swift */; };
-        6E064B1229DD32A200D9A2D2 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 6E064B1129DD32A200D9A2D2 /* Sparkle */; };
+        6E064B1229DD32A200D9A2D2 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 6E064B1129DD32A200D9A2D2 /* Sparkle */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
         6E064B1429DD331F00D9A2D2 /* SparkleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E064B1329DD331F00D9A2D2 /* SparkleView.swift */; };
         6E17B6462AF3FDC100831173 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E17B6452AF3FDC100831173 /* PinView.swift */; };
         6E17B6492AF4118F00831173 /* EnvironmentArgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E17B6482AF4118F00831173 /* EnvironmentArgView.swift */; };
@@ -92,6 +92,7 @@
             files = (
                 6E2FB15E2B589A7800E344C6 /* cabextract in Embed BrandyCmd */,
                 6E95F66D2AB3EF3A00D585D1 /* BrandyCmd in Embed BrandyCmd */,
+                6E064B1229DD32A200D9A2D2 /* Sparkle in Frameworks */,
             );
             name = "Embed BrandyCmd";
             runOnlyForDeploymentPostprocessing = 0;
