@@ -83,7 +83,7 @@ struct WelcomeView: View {
                         }
 
                         if !whiskyWineInstalled {
-                            path.append(.whiskyWineDownload)
+                            path.append(.brewWineInstall)
                             return
                         }
 
