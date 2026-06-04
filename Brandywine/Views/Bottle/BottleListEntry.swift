@@ -30,7 +30,9 @@ struct BottleListEntry: View {
 
     var body: some View {
         Text(name)
-            .opacity(bottle.isAvailable ? 1.0 : 0.5)
+            .font(.system(size: 13, weight: .regular))
+            .foregroundStyle(BrandyTheme.accent)
+        .opacity(bottle.isAvailable ? 1.0 : 0.5)
             .onChange(of: refresh, initial: true) {
                 name = bottle.settings.name
             }

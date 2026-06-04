@@ -36,11 +36,18 @@ struct PinAddView: View {
             .frame(width: 45, height: 45)
             Spacer()
             Text("pin.help")
+                .font(.system(size: 11, weight: .regular))
+                .foregroundStyle(BrandyTheme.accentMuted)
                 .multilineTextAlignment(.center)
                 .lineLimit(2, reservesSpace: true)
         }
         .frame(width: 90, height: 90)
-        .padding(10)
+        .padding(12)
+        .brandSurface(cornerRadius: 14)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(BrandyTheme.borderSubtle, style: StrokeStyle(lineWidth: 1, dash: [5, 4]))
+        )
         .sheet(isPresented: $showingSheet) {
             PinCreationView(bottle: bottle)
         }

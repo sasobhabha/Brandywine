@@ -43,6 +43,7 @@ struct ContentView: View {
         } detail: {
             detail
         }
+        .navigationSplitViewStyle(.balanced)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -154,6 +155,8 @@ struct ContentView: View {
             .animation(.default, value: bottleVM.bottles)
             .animation(.default, value: bottleFilter)
             .listStyle(.sidebar)
+            .scrollContentBackground(.hidden)
+            .brandSidebarStyle()
             .searchable(text: $bottleFilter, placement: .sidebar)
             .onChange(of: newlyCreatedBottleURL) { _, url in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -176,20 +179,21 @@ struct ContentView: View {
             }
         } else {
             if (bottleVM.bottles.isEmpty || bottleVM.countActive() == 0) && bottlesLoaded {
-                VStack {
+                VStack(spacing: 20) {
                     Text("main.createFirst")
+                        .font(BrandyTheme.titleFont)
+                        .foregroundStyle(BrandyTheme.accent)
+                        .multilineTextAlignment(.center)
                     Button {
                         showBottleCreation.toggle()
                     } label: {
-                        HStack {
-                            Image(systemName: "plus")
-                            Text("button.createBottle")
-                        }
-                        .padding(6)
+                        Label("button.createBottle", systemImage: "plus")
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.accentColor)
+                    .buttonStyle(BrandPrimaryButtonStyle())
                 }
+                .padding(40)
+                .frame(maxWidth: 320)
+                .brandSurface(cornerRadius: 16)
             }
         }
     }

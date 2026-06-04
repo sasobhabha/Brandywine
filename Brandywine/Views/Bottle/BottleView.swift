@@ -45,19 +45,19 @@ struct BottleView: View {
                     }
                     PinAddView(bottle: bottle)
                 }
-                .padding()
+                .padding(20)
                 Form {
                     NavigationLink(value: BottleStage.programs) {
                         Label("tab.programs", systemImage: "list.bullet")
+                            .foregroundStyle(BrandyTheme.accent)
                     }
                     NavigationLink(value: BottleStage.config) {
                         Label("tab.config", systemImage: "gearshape")
+                            .foregroundStyle(BrandyTheme.accent)
                     }
-//                    NavigationLink(value: BottleStage.processes) {
-//                        Label("tab.processes", systemImage: "hockey.puck.circle")
-//                    }
                 }
                 .formStyle(.grouped)
+                .scrollContentBackground(.hidden)
                 .scrollDisabled(true)
             }
             .bottomBar {
