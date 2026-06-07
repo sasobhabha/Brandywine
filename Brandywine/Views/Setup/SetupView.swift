@@ -20,6 +20,7 @@ import SwiftUI
 
 enum SetupStage {
     case rosetta
+    case brewWineInstall
     case whiskyWineDownload
     case whiskyWineInstall
 }
@@ -39,6 +40,8 @@ struct SetupView: View {
                         switch stage {
                         case .rosetta:
                             RosettaView(path: $path, showSetup: $showSetup)
+                        case .brewWineInstall:
+                            BrewWineInstallView(path: $path, showSetup: $showSetup)
                         case .whiskyWineDownload:
                             GcenxWineDownloadView(tarLocation: $tarLocation, path: $path)
                         case .whiskyWineInstall:

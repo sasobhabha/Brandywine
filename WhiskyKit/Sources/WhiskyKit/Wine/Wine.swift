@@ -26,13 +26,11 @@ public class Wine {
     public static var wineBinary: URL {
         WineBinaryResolver.executableURL(in: WhiskyWineInstaller.binFolder)
     }
-
     public static var wineCommandName: String {
         WineBinaryResolver.commandName(in: WhiskyWineInstaller.binFolder)
     }
     /// Parth to the `wineserver` binary
     private static let wineserverBinary: URL = WhiskyWineInstaller.binFolder.appending(path: "wineserver")
-
     /// Run a process on a executable file given by the `executableURL`
     private static func runProcess(
         name: String? = nil, args: [String], environment: [String: String], executableURL: URL, directory: URL? = nil,
@@ -179,9 +177,8 @@ public class Wine {
         var result: [String] = []
         let fileHandle = try makeFileHandle()
         fileHandle.writeApplicaitonInfo()
-        var environment = environment
-
-        if let bottle = bottle {
+            var environment = environment
+            if let bottle = bottle {
             fileHandle.writeInfo(for: bottle)
             environment = constructWineEnvironment(for: bottle, environment: environment)
         }
@@ -213,7 +210,6 @@ public class Wine {
     public static func runBatchFile(url: URL, bottle: Bottle) async throws -> String {
         return try await runWine(["cmd", "/c", url.path(percentEncoded: false)], bottle: bottle)
     }
-
     public static func killBottle(bottle: Bottle) throws {
         Task.detached(priority: .userInitiated) {
             try await runWineserver(["-k"], bottle: bottle)

@@ -17186,7 +17186,6 @@
       }
     },
     "setup.whiskywine.download" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -17323,7 +17322,6 @@
       }
     },
     "setup.whiskywine.download.subtitle" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -17460,7 +17458,6 @@
       }
     },
     "setup.whiskywine.eta" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -17869,7 +17866,6 @@
       }
     },
     "setup.whiskywine.progress" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
