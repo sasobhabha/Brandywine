@@ -277,26 +277,13 @@ public struct BottleSettings: Codable, Equatable {
         try data.write(to: metadataUrl)
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     public func environmentVariables(wineEnv: inout [String: String]) {
         if dxvk {
-            wineEnv.updateValue("dxgi,d3d9,d3d10core,d3d11=n,b", forKey: "WINEDLLOVERRIDES")
-            switch dxvkHud {
-            case .full:
-                wineEnv.updateValue("full", forKey: "DXVK_HUD")
-            case .partial:
-                wineEnv.updateValue("devinfo,fps,frametimes", forKey: "DXVK_HUD")
-            case .fps:
-                wineEnv.updateValue("fps", forKey: "DXVK_HUD")
-            case .off:
-                break
+            applyDXVKEnv(wineEnv: &wineEnv)
+            if dxvkAsync {
+                wineEnv.updateValue("1", forKey: "DXVK_ASYNC")
             }
         }
-
-        if dxvkAsync {
-            wineEnv.updateValue("1", forKey: "DXVK_ASYNC")
-        }
-
         switch enhancedSync {
         case .none:
             break
@@ -304,26 +291,50 @@ public struct BottleSettings: Codable, Equatable {
             wineEnv.updateValue("1", forKey: "WINEESYNC")
         case .msync:
             wineEnv.updateValue("1", forKey: "WINEMSYNC")
-            // D3DM detects ESYNC and changes behaviour accordingly
-            // so we have to lie to it so that it doesn't break
-            // under MSYNC. Values hardcoded in lid3dshared.dylib
             wineEnv.updateValue("1", forKey: "WINEESYNC")
         }
-
         if metalHud {
             wineEnv.updateValue("1", forKey: "MTL_HUD_ENABLED")
         }
-
         if metalTrace {
             wineEnv.updateValue("1", forKey: "METAL_CAPTURE_ENABLED")
         }
-
         if avxEnabled {
             wineEnv.updateValue("1", forKey: "ROSETTA_ADVERTISE_AVX")
         }
-
         if dxrEnabled {
             wineEnv.updateValue("1", forKey: "D3DM_SUPPORT_DXR")
+        }
+    }
+
+    private func applyDXVKEnv(wineEnv: inout [String: String]) {
+        if let resourceURL = Bundle.main.resourceURL {
+            let dxvkPath = resourceURL.appending(path: "dxvk-macos").path
+            let dllPath = "\(dxvkPath)/x64:\(dxvkPath)/x32"
+            wineEnv.updateValue(dllPath, forKey: "WINEDLLPATH")
+            let configPath = resourceURL.appending(path: "dxvk-macos/dxvk.conf").path
+            wineEnv.updateValue(configPath, forKey: "DXVK_CONFIG_FILE")
+        }
+        if let bottlePath = wineEnv["WINEPREFIX"] {
+            let icdPath = "\(bottlePath)/drive_c/windows/MoltenVK_icd.json"
+            wineEnv.updateValue(icdPath, forKey: "VK_ICD_FILENAMES")
+        }
+        let moltenVKLibPath = WhiskyWineInstaller.libraryFolder
+            .appending(path: "Wine").appending(path: "lib").path
+        if let existing = wineEnv["DYLD_FALLBACK_LIBRARY_PATH"] {
+            wineEnv["DYLD_FALLBACK_LIBRARY_PATH"] = "\(moltenVKLibPath):\(existing)"
+        } else {
+            wineEnv["DYLD_FALLBACK_LIBRARY_PATH"] = moltenVKLibPath
+        }
+        switch dxvkHud {
+        case .full:
+            wineEnv.updateValue("full", forKey: "DXVK_HUD")
+        case .partial:
+            wineEnv.updateValue("devinfo,fps,frametimes", forKey: "DXVK_HUD")
+        case .fps:
+            wineEnv.updateValue("fps", forKey: "DXVK_HUD")
+        case .off:
+            break
         }
     }
 }

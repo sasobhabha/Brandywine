@@ -109,25 +109,6 @@
             name = "Embed Foundation Extensions";
             runOnlyForDeploymentPostprocessing = 0;
         };
-        6E70A49C2A9A2197007799E9 /* DXMT: Install launcher & set perms */ = {
-            isa = PBXShellScriptBuildPhase;
-            alwaysOutOfDate = 0;
-            buildActionMask = 2147483647;
-            files = (
-            );
-            inputFileListPaths = (
-            );
-            inputPaths = (
-            );
-            name = "DXMT: Install launcher & set perms";
-            outputFileListPaths = (
-            );
-            outputPaths = (
-            );
-            runOnlyForDeploymentPostprocessing = 0;
-            shellPath = /bin/sh;
-            shellScript = "set -e\n# Locate built .app bundle using BUILT_PRODUCTS_DIR and WRAPPER_NAME\nAPP_BUNDLE=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\"\nAPP_BIN_DIR=\"$APP_BUNDLE/Contents/MacOS\"\nDXMT_RES=\"$APP_BUNDLE/Contents/Resources/dxmt\"\n# Export environment variables for consumers at build-time (also provided at runtime by launcher)\nexport WINEDLLPATH=\"$DXMT_RES\"\nexport DYLD_FALLBACK_LIBRARY_PATH=\"$DXMT_RES\"\n# Install launcher into app bundle and make executable\nmkdir -p \"$APP_BIN_DIR\"\ncp \"${PROJECT_DIR}/Brandywine/Scripts/dxmt-launcher.sh\" \"$APP_BIN_DIR/Brandywine-dxmt\"\nchmod +x \"$APP_BIN_DIR/Brandywine-dxmt\"\n";
-        };
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -429,6 +410,7 @@
                 6E40494E29CCA19C006E3F1B /* Sources */,
                 6E40494F29CCA19C006E3F1B /* Frameworks */,
                 6E40495029CCA19C006E3F1B /* Resources */,
+                5BD97694D86041088DF2B44B /* DXVK-macOS: Install DLLs */,
                 6E50D98129CD0EAF008C39F6 /* SwiftLint */,
                 6E95F66C2AB3EF2F00D585D1 /* Embed BrandyCmd */,
                 6EFDF65A2AAE2DA800EF622F /* Embed Foundation Extensions */,
@@ -602,6 +584,25 @@
             runOnlyForDeploymentPostprocessing = 0;
             shellPath = /bin/sh;
             shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n    echo \"Running SwiftLint\"\n    swiftlint --strict\nelse\n    echo \"warning: SwiftLint not installed, skipping\"\nfi\n";
+        };
+        5BD97694D86041088DF2B44B /* DXVK-macOS: Install DLLs */ = {
+            isa = PBXShellScriptBuildPhase;
+            alwaysOutOfDate = 0;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            inputFileListPaths = (
+            );
+            inputPaths = (
+            );
+            name = "DXVK-macOS: Install DLLs";
+            outputFileListPaths = (
+            );
+            outputPaths = (
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+            shellPath = /bin/sh;
+            shellScript = "set -e\nAPP_BUNDLE=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\"\n# Clean up old DXMT directory if present\nrm -rf \"$APP_BUNDLE/Contents/Resources/dxmt\"\nDXVK_RES=\"$APP_BUNDLE/Contents/Resources/dxvk-macos\"\nDXVK_SRC=\"${PROJECT_DIR}/Brandywine/Resources/dxvk-macos\"\nmkdir -p \"$DXVK_RES/x64\"\nmkdir -p \"$DXVK_RES/x32\"\ncp \"$DXVK_SRC/x64/\"*.dll \"$DXVK_RES/x64/\"\ncp \"$DXVK_SRC/x32/\"*.dll \"$DXVK_RES/x32/\"\ncp \"$DXVK_SRC/MoltenVK_icd.json\" \"$DXVK_RES/\"\ncp \"$DXVK_SRC/dxvk.conf\" \"$DXVK_RES/\"\n";
         };
 /* End PBXShellScriptBuildPhase section */
 

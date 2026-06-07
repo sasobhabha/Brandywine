@@ -103,7 +103,7 @@ public class SteamHelper {
             changed = true
         }
 
-        // Enable DXVK for Direct3D/Vulkan support
+        // Enable DXVK for Direct3D support
         if !bottle.settings.dxvk {
             bottle.settings.dxvk = true
             changed = true
@@ -161,7 +161,7 @@ public class SteamHelper {
                    "Configuration:\n" +
                    "• Windows Version: Windows 11\n" +
                    "• Synchronization: MSYNC (Multi-Sync)\n" +
-                   "• Graphics API: DXVK Enabled\n" +
+                    "• Graphics API: DXVK Enabled\n" +
                    "• Registry: Optimized\n\n" +
                    "Your Steam installation is ready for optimal performance."
         } else {
