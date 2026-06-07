@@ -42,6 +42,27 @@ public class Tar {
         }
     }
 
+    public static func untarXz(tarBall: URL, toURL: URL) throws {
+        let process = Process()
+        let pipe = Pipe()
+
+        process.executableURL = tarBinary
+        process.arguments = ["-xJf", "\(tarBall.path)", "-C", "\(toURL.path)"]
+        process.standardOutput = pipe
+        process.standardError = pipe
+
+        try process.run()
+
+        if let output = try pipe.fileHandleForReading.readToEnd() {
+            let outputString = String(data: output, encoding: .utf8) ?? String()
+            process.waitUntilExit()
+            let status = process.terminationStatus
+            if status != 0 {
+                throw outputString
+            }
+        }
+    }
+
     public static func untar(tarBall: URL, toURL: URL) throws {
         let process = Process()
         let pipe = Pipe()

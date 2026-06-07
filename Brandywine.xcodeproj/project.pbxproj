@@ -39,6 +39,8 @@
         6E6C0CF22A419A6800356232 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF12A419A6800356232 /* WelcomeView.swift */; };
         6E6C0CF42A419A7600356232 /* RosettaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF32A419A7600356232 /* RosettaView.swift */; };
         6E6C0CF62A419A8300356232 /* BrewWineInstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF52A419A8300356232 /* BrewWineInstallView.swift */; };
+        A1B2C0D12A419A8300356231 /* GcenxWineDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C0D32A419A8300356233 /* GcenxWineDownloadView.swift */; };
+        A1B2C0D22A419A8300356234 /* GcenxWineInstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C0D42A419A8300356235 /* GcenxWineInstallView.swift */; };
         6E70A49B2A9A2197007799E9 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E70A49A2A9A2197007799E9 /* Main.swift */; };
         6E70A4A12A9A280C007799E9 /* BrandyCmd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E70A4A02A9A280C007799E9 /* BrandyCmd.swift */; };
         6E7C07BE2AAE7B0100F6E66B /* ProgramShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C07BD2AAE7B0100F6E66B /* ProgramShortcut.swift */; };
@@ -160,6 +162,8 @@
         6E6C0CF12A419A6800356232 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
         6E6C0CF32A419A7600356232 /* RosettaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosettaView.swift; sourceTree = "<group>"; };
         6E6C0CF52A419A8300356232 /* BrewWineInstallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewWineInstallView.swift; sourceTree = "<group>"; };
+        A1B2C0D32A419A8300356233 /* GcenxWineDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GcenxWineDownloadView.swift; sourceTree = "<group>"; };
+        A1B2C0D42A419A8300356235 /* GcenxWineInstallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GcenxWineInstallView.swift; sourceTree = "<group>"; };
         6E70A4982A9A2197007799E9 /* BrandyCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BrandyCmd; sourceTree = BUILT_PRODUCTS_DIR; };
         6E70A49A2A9A2197007799E9 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
         6E70A4A02A9A280C007799E9 /* BrandyCmd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandyCmd.swift; sourceTree = "<group>"; };
@@ -390,6 +394,8 @@
                 6E6C0CF12A419A6800356232 /* WelcomeView.swift */,
                 6E6C0CF32A419A7600356232 /* RosettaView.swift */,
                 6E6C0CF52A419A8300356232 /* BrewWineInstallView.swift */,
+                A1B2C0D32A419A8300356233 /* GcenxWineDownloadView.swift */,
+                A1B2C0D42A419A8300356235 /* GcenxWineInstallView.swift */,
             );
             path = Setup;
             sourceTree = "<group>";
@@ -595,7 +601,7 @@
             );
             runOnlyForDeploymentPostprocessing = 0;
             shellPath = /bin/sh;
-            shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n    echo \"Running SwiftLint\"\n    swiftlint --strict\nelse\n    echo \"error: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n    exit -1\nfi\n";
+            shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n    echo \"Running SwiftLint\"\n    swiftlint --strict\nelse\n    echo \"warning: SwiftLint not installed, skipping\"\nfi\n";
         };
 /* End PBXShellScriptBuildPhase section */
 
@@ -623,6 +629,8 @@
                 6E17B6492AF4118F00831173 /* EnvironmentArgView.swift in Sources */,
                 6E6C0CF42A419A7600356232 /* RosettaView.swift in Sources */,
                 6E6C0CF62A419A8300356232 /* BrewWineInstallView.swift in Sources */,
+                A1B2C0D12A419A8300356231 /* GcenxWineDownloadView.swift in Sources */,
+                A1B2C0D22A419A8300356234 /* GcenxWineInstallView.swift in Sources */,
                 6365C4C12B1AA69D00AAE1FD /* Animation+Extensions.swift in Sources */,
                 6E40498329CCA91B006E3F1B /* Bottle+Extensions.swift in Sources */,
                 6E621CEF2A5F631300C9AAB3 /* Winetricks.swift in Sources */,

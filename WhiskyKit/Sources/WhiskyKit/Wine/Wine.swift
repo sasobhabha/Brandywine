@@ -22,8 +22,14 @@ import os.log
 public class Wine {
     /// URL to the installed `DXVK` folder
     private static let dxvkFolder: URL = WhiskyWineInstaller.libraryFolder.appending(path: "DXVK")
-    /// Path to the `wine` binary
-    public static let wineBinary: URL = WhiskyWineInstaller.binFolder.appending(path: "wine")
+    /// Path to the active Wine launcher (`wine` or legacy `wine64`).
+    public static var wineBinary: URL {
+        WineBinaryResolver.executableURL(in: WhiskyWineInstaller.binFolder)
+    }
+
+    public static var wineCommandName: String {
+        WineBinaryResolver.commandName(in: WhiskyWineInstaller.binFolder)
+    }
     /// Parth to the `wineserver` binary
     private static let wineserverBinary: URL = WhiskyWineInstaller.binFolder.appending(path: "wineserver")
 
