@@ -27,6 +27,8 @@ struct GcenxWineDownloadView: View {
     @State private var downloadTask: URLSessionDownloadTask?
     @State private var observation: NSKeyValueObservation?
     @State private var startTime: Date?
+    @State private var downloadFailed: Bool = false
+    @State private var errorMessage: String = ""
     @Binding var tarLocation: URL
     @Binding var path: [SetupStage]
     var body: some View {
@@ -39,25 +41,36 @@ struct GcenxWineDownloadView: View {
                     .font(.subheadline)
                     .foregroundStyle(BrandyTheme.accentMuted)
                 Spacer()
-                VStack {
-                    ProgressView(value: fractionProgress, total: 1)
-                    HStack {
-                        HStack {
-                            Text(String(format: String(localized: "setup.whiskywine.progress"),
-                                        formatBytes(bytes: completedBytes),
-                                        formatBytes(bytes: totalBytes)))
-                            + Text(String(" "))
-                            + (shouldShowEstimate() ?
-                               Text(String(format: String(localized: "setup.whiskywine.eta"),
-                                           formatRemainingTime(remainingBytes: totalBytes - completedBytes)))
-                               : Text(String()))
-                            Spacer()
-                        }
+                if downloadFailed {
+                    Image(systemName: "xmark.circle")
+                        .resizable()
+                        .frame(width: 56, height: 56)
+                        .foregroundStyle(.red)
+                    Text(errorMessage)
                         .font(.subheadline)
-                        .monospacedDigit()
+                        .foregroundStyle(.red)
+                        .padding(.top, 8)
+                } else {
+                    VStack {
+                        ProgressView(value: fractionProgress, total: 1)
+                        HStack {
+                            HStack {
+                                Text(String(format: String(localized: "setup.whiskywine.progress"),
+                                            formatBytes(bytes: completedBytes),
+                                            formatBytes(bytes: totalBytes)))
+                                + Text(String(" "))
+                                + (shouldShowEstimate() ?
+                                   Text(String(format: String(localized: "setup.whiskywine.eta"),
+                                                formatRemainingTime(remainingBytes: totalBytes - completedBytes)))
+                                   : Text(String()))
+                                Spacer()
+                            }
+                            .font(.subheadline)
+                            .monospacedDigit()
+                        }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
                 Spacer()
             }
             Spacer()
@@ -73,12 +86,21 @@ struct GcenxWineDownloadView: View {
                 }
 
                 if let url: URL = URL(string: BrandyTheme.wineStagingDownloadURL) {
-                    downloadTask = URLSession(configuration: .ephemeral).downloadTask(with: url) { url, _, _ in
+                    downloadTask = URLSession(configuration: .ephemeral).downloadTask(with: url) { url, response, error in
                         Task.detached {
                             await MainActor.run {
                                 if let url = url {
                                     tarLocation = url
                                     proceed()
+                                } else {
+                                    downloadFailed = true
+                                    if let error = error {
+                                        errorMessage = error.localizedDescription
+                                    } else if let httpResponse = response as? HTTPURLResponse {
+                                        errorMessage = "Download failed (HTTP \(httpResponse.statusCode))"
+                                    } else {
+                                        errorMessage = "Download failed"
+                                    }
                                 }
                             }
                         }

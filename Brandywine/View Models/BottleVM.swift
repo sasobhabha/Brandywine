@@ -54,16 +54,25 @@ final class BottleVM: ObservableObject, @unchecked Sendable {
 
                 bottle.settings.windowsVersion = winVersion
                 bottle.settings.name = bottleName
+
+                // Register the bottle immediately so it survives a crash
+                await MainActor.run {
+                    self.bottlesList.paths.append(newBottleDir)
+                }
+
                 try await Wine.changeWinVersion(bottle: bottle, win: winVersion)
                 let wineVer = try await Wine.wineVersion()
                 bottle.settings.wineVersion = SemanticVersion(wineVer) ?? SemanticVersion(0, 0, 0)
-                // Add record
+
                 await MainActor.run {
-                    self.bottlesList.paths.append(newBottleDir)
                     self.loadBottles()
                 }
             } catch {
                 print("Failed to create new bottle: \(error)")
+                await MainActor.run {
+                    self.bottlesList.paths.removeAll { $0 == newBottleDir }
+                }
+                try? FileManager.default.removeItem(at: newBottleDir)
                 if let bottle = bottleId {
                     await MainActor.run {
                         if let index = self.bottles.firstIndex(of: bottle) {

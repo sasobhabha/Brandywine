@@ -21,6 +21,8 @@ import WhiskyKit
 
 struct GcenxWineInstallView: View {
     @State var installing: Bool = true
+    @State var installFailed: Bool = false
+    @State var errorMessage: String = ""
     @Binding var tarLocation: URL
     @Binding var path: [SetupStage]
     @Binding var showSetup: Bool
@@ -39,6 +41,15 @@ struct GcenxWineInstallView: View {
                     ProgressView()
                         .progressViewStyle(.circular)
                         .frame(width: 80)
+                } else if installFailed {
+                    Image(systemName: "xmark.circle")
+                        .resizable()
+                        .frame(width: 56, height: 56)
+                        .foregroundStyle(.red)
+                    Text(errorMessage)
+                        .font(.subheadline)
+                        .foregroundStyle(.red)
+                        .padding(.top, 8)
                 } else {
                     Image(systemName: "checkmark.circle")
                         .resizable()
@@ -51,13 +62,22 @@ struct GcenxWineInstallView: View {
         }
         .frame(width: 400, height: 200)
         .onAppear {
+            let location = tarLocation
             Task.detached {
-                await WhiskyWineInstaller.install(from: tarLocation)
-                await MainActor.run {
-                    installing = false
+                do {
+                    try WhiskyWineInstaller.install(from: location)
+                    await MainActor.run {
+                        installing = false
+                    }
+                    sleep(2)
+                    await proceed()
+                } catch {
+                    await MainActor.run {
+                        installing = false
+                        installFailed = true
+                        errorMessage = error.localizedDescription
+                    }
                 }
-                sleep(2)
-                await proceed()
             }
         }
     }

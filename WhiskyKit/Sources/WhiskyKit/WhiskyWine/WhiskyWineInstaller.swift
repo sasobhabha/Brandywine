@@ -30,7 +30,26 @@ public class WhiskyWineInstaller {
     public static let libraryFolder = applicationFolder.appending(path: "Libraries")
 
     /// URL to the installed `wine` `bin` directory
-    public static let binFolder: URL = libraryFolder.appending(path: "Wine").appending(path: "bin")
+    public static var binFolder: URL {
+        let standard = libraryFolder.appending(path: "Wine").appending(path: "bin")
+        let fileManager = FileManager.default
+        if fileManager.isExecutableFile(atPath: standard.appending(path: "wine").path) ||
+            fileManager.isExecutableFile(atPath: standard.appending(path: "wine64").path) {
+            return standard
+        }
+        // Check inside Wine Staging.app bundle (alternative install layout)
+        let bundle = libraryFolder
+            .appending(path: "Wine Staging.app")
+            .appending(path: "Contents")
+            .appending(path: "Resources")
+            .appending(path: "wine")
+            .appending(path: "bin")
+        if fileManager.isExecutableFile(atPath: bundle.appending(path: "wine").path) ||
+            fileManager.isExecutableFile(atPath: bundle.appending(path: "wine64").path) {
+            return bundle
+        }
+        return standard
+    }
 
     public static func isWhiskyWineInstalled() -> Bool {
         FileManager.default.isExecutableFile(
@@ -38,28 +57,21 @@ public class WhiskyWineInstaller {
         )
     }
 
-    public static func install(from: URL) {
-        do {
-            if GcenxWine.isGcenxArchive(from) {
-                if !FileManager.default.fileExists(atPath: applicationFolder.path) {
-                    try FileManager.default.createDirectory(at: applicationFolder, withIntermediateDirectories: true)
-                }
-                try GcenxWine.installWine(from: from, libraryFolder: libraryFolder)
-            } else {
-                if !FileManager.default.fileExists(atPath: applicationFolder.path) {
-                    try FileManager.default.createDirectory(at: applicationFolder, withIntermediateDirectories: true)
-                } else {
-                    try FileManager.default.removeItem(at: applicationFolder)
-                    try FileManager.default.createDirectory(at: applicationFolder, withIntermediateDirectories: true)
-                }
-                try Tar.untar(tarBall: from, toURL: applicationFolder)
-                try WineBinaryResolver.ensureWine64Symlink(in: binFolder)
+    public static func install(from: URL) throws {
+        if GcenxWine.isGcenxArchive(from) {
+            if !FileManager.default.fileExists(atPath: libraryFolder.path) {
+                try FileManager.default.createDirectory(at: libraryFolder, withIntermediateDirectories: true)
             }
-            if from.path.contains(FileManager.default.temporaryDirectory.path) {
-                try? FileManager.default.removeItem(at: from)
+            try GcenxWine.installWine(from: from, libraryFolder: libraryFolder)
+        } else {
+            if !FileManager.default.fileExists(atPath: libraryFolder.path) {
+                try FileManager.default.createDirectory(at: libraryFolder, withIntermediateDirectories: true)
             }
-        } catch {
-            print("Failed to install WhiskyWine: \(error)")
+            try Tar.untar(tarBall: from, toURL: libraryFolder)
+            try WineBinaryResolver.ensureWine64Symlink(in: binFolder)
+        }
+        if from.path.contains(FileManager.default.temporaryDirectory.path) {
+            try? FileManager.default.removeItem(at: from)
         }
     }
 
