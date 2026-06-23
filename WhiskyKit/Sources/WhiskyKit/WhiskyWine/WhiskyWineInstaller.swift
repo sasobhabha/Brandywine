@@ -33,34 +33,8 @@ public class WhiskyWineInstaller {
     public static let binFolder: URL = libraryFolder.appending(path: "Wine").appending(path: "bin")
 
     public static func isWhiskyWineInstalled() -> Bool {
-        FileManager.default.isExecutableFile(
-            atPath: WineBinaryResolver.executableURL(in: binFolder).path
-        )
-    }
-
-    public static func install(from: URL) {
-        do {
-            if GcenxWine.isGcenxArchive(from) {
-                if !FileManager.default.fileExists(atPath: applicationFolder.path) {
-                    try FileManager.default.createDirectory(at: applicationFolder, withIntermediateDirectories: true)
-                }
-                try GcenxWine.installWine(from: from, libraryFolder: libraryFolder)
-            } else {
-                if !FileManager.default.fileExists(atPath: applicationFolder.path) {
-                    try FileManager.default.createDirectory(at: applicationFolder, withIntermediateDirectories: true)
-                } else {
-                    try FileManager.default.removeItem(at: applicationFolder)
-                    try FileManager.default.createDirectory(at: applicationFolder, withIntermediateDirectories: true)
-                }
-                try Tar.untar(tarBall: from, toURL: applicationFolder)
-                try WineBinaryResolver.ensureWine64Symlink(in: binFolder)
-            }
-            if from.path.contains(FileManager.default.temporaryDirectory.path) {
-                try? FileManager.default.removeItem(at: from)
-            }
-        } catch {
-            print("Failed to install WhiskyWine: \(error)")
-        }
+        let winePath = binFolder.appending(path: "wine")
+        return FileManager.default.fileExists(atPath: winePath.path)
     }
 
     public static func isBrewInstalled() -> Bool {
@@ -150,7 +124,6 @@ public class WhiskyWineInstaller {
         try? FileManager.default.removeItem(at: wineserverDst)
         try FileManager.default.createSymbolicLink(at: wineDst, withDestinationURL: wineSrc)
         try FileManager.default.createSymbolicLink(at: wineserverDst, withDestinationURL: wineserverSrc)
-        try WineBinaryResolver.ensureWine64Symlink(in: binFolder)
     }
 
     private static func installHomebrew() async throws {
@@ -224,7 +197,7 @@ public class WhiskyWineInstaller {
     }
 
     public static func shouldUpdateWhiskyWine() async -> (Bool, SemanticVersion) {
-        let targetVersion = GcenxWine.bundledVersion
+        let targetVersion = SemanticVersion(11, 5, 0)
         let localVersion = whiskyWineVersion()
 
         if let localVersion = localVersion {

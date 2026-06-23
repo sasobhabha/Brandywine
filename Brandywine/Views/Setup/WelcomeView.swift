@@ -32,18 +32,18 @@ struct WelcomeView: View {
             VStack {
                 if firstTime {
                     Text("setup.welcome")
-                        .font(BrandyTheme.titleFont)
-                        .foregroundStyle(BrandyTheme.accent)
+                        .font(.title)
+                        .fontWeight(.bold)
                     Text("setup.welcome.subtitle")
                         .font(.subheadline)
-                        .foregroundStyle(BrandyTheme.accentMuted)
+                        .foregroundStyle(.secondary)
                 } else {
                     Text("setup.title")
-                        .font(BrandyTheme.titleFont)
-                        .foregroundStyle(BrandyTheme.accent)
+                        .font(.title)
+                        .fontWeight(.bold)
                     Text("setup.subtitle")
                         .font(.subheadline)
-                        .foregroundStyle(BrandyTheme.accentMuted)
+                        .foregroundStyle(.secondary)
                 }
             }
             .padding(.horizontal)
@@ -59,13 +59,6 @@ struct WelcomeView: View {
             }
             .formStyle(.grouped)
             .scrollDisabled(true)
-            .scrollContentBackground(.hidden)
-            .background(BrandyTheme.canvas)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(BrandyTheme.borderSubtle, lineWidth: 1)
-            )
             .onAppear {
                 checkInstallStatus()
             }
@@ -90,7 +83,7 @@ struct WelcomeView: View {
                         }
 
                         if !whiskyWineInstalled {
-                            path.append(.whiskyWineDownload)
+                            path.append(.brewWineInstall)
                             return
                         }
 
@@ -121,8 +114,7 @@ struct InstallStatusView: View {
             Group {
                 if let installed = isInstalled {
                     Circle()
-                        .fill(installed ? BrandyTheme.accent.opacity(0.35) : BrandyTheme.accentMuted.opacity(0.4))
-                        .frame(width: 6, height: 6)
+                        .foregroundColor(installed ? .green : .red)
                 } else {
                     ProgressView()
                         .controlSize(.small)
@@ -130,8 +122,6 @@ struct InstallStatusView: View {
             }
             .frame(width: 10)
             Text(String.init(format: text, name))
-                .font(.system(size: 13))
-                .foregroundStyle(BrandyTheme.accent)
             Spacer()
             if let installed = isInstalled {
                 if installed && showUninstall {

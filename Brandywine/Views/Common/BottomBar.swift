@@ -33,12 +33,10 @@ private struct BottomBarViewModifier<BarContent>: ViewModifier where BarContent:
         content
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 VStack(spacing: 0) {
-                    Rectangle()
-                        .fill(BrandyTheme.borderSubtle)
-                        .frame(height: 1)
+                    Divider()
                     barContent
                 }
-                .background(BrandyTheme.surface)
+                .background(.regularMaterial)
                 .buttonStyle(BottomBarButtonStyle())
             }
     }
@@ -50,8 +48,7 @@ struct BottomBarButtonStyle: PrimitiveButtonStyle {
             configuration.trigger()
         } label: {
             configuration.label
-                .font(.system(size: 12, weight: .regular))
-                .foregroundStyle(BrandyTheme.accentMuted)
+                .foregroundStyle(.foreground)
         }
     }
 }

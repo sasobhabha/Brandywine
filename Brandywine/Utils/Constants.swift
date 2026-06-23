@@ -80,28 +80,3 @@ public struct SettingItemView<Content: View>: View {
         }
     }
 }
-
-enum BrandyTheme {
-    static let wineStagingDownloadURL =
-        "https://github.com/Gcenx/macOS_Wine_builds/releases/download/11.9/wine-staging-11.9-osx64.tar.xz"
-
-    static var localWineArchiveURL: URL? {
-        let downloads = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first
-        let candidates = [
-            downloads?.appending(path: "wine-staging-11.9-osx64.tar.xz"),
-            downloads?.appending(path: "brandywine-work/wine-staging-11.9-osx64.tar.xz")
-        ]
-        return candidates.compactMap { $0 }.first { FileManager.default.fileExists(atPath: $0.path) }
-    }
-
-    static let canvas = Color(red: 0.98, green: 0.98, blue: 0.97)
-    static let sidebar = Color(red: 0.96, green: 0.96, blue: 0.95)
-    static let surface = Color.white
-    static let border = Color.black.opacity(0.08)
-    static let borderSubtle = Color.black.opacity(0.05)
-    static let accent = Color(red: 0.12, green: 0.12, blue: 0.12)
-    static let accentMuted = Color(red: 0.45, green: 0.45, blue: 0.44)
-    static let shadow = Color.black.opacity(0.04)
-
-    static let titleFont: Font = .system(size: 22, weight: .light, design: .default)
-}

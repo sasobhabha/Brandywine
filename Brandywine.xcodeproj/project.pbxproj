@@ -39,8 +39,6 @@
         6E6C0CF22A419A6800356232 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF12A419A6800356232 /* WelcomeView.swift */; };
         6E6C0CF42A419A7600356232 /* RosettaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF32A419A7600356232 /* RosettaView.swift */; };
         6E6C0CF62A419A8300356232 /* BrewWineInstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6C0CF52A419A8300356232 /* BrewWineInstallView.swift */; };
-        A1B2C0D12A419A8300356231 /* GcenxWineDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C0D32A419A8300356233 /* GcenxWineDownloadView.swift */; };
-        A1B2C0D22A419A8300356234 /* GcenxWineInstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C0D42A419A8300356235 /* GcenxWineInstallView.swift */; };
         6E70A49B2A9A2197007799E9 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E70A49A2A9A2197007799E9 /* Main.swift */; };
         6E70A4A12A9A280C007799E9 /* BrandyCmd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E70A4A02A9A280C007799E9 /* BrandyCmd.swift */; };
         6E7C07BE2AAE7B0100F6E66B /* ProgramShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C07BD2AAE7B0100F6E66B /* ProgramShortcut.swift */; };
@@ -109,6 +107,25 @@
             name = "Embed Foundation Extensions";
             runOnlyForDeploymentPostprocessing = 0;
         };
+        6E70A49C2A9A2197007799E9 /* DXMT: Install launcher & set perms */ = {
+            isa = PBXShellScriptBuildPhase;
+            alwaysOutOfDate = 0;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            inputFileListPaths = (
+            );
+            inputPaths = (
+            );
+            name = "DXMT: Install launcher & set perms";
+            outputFileListPaths = (
+            );
+            outputPaths = (
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+            shellPath = /bin/sh;
+            shellScript = "set -e\n# Locate built .app bundle using BUILT_PRODUCTS_DIR and WRAPPER_NAME\nAPP_BUNDLE=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\"\nAPP_BIN_DIR=\"$APP_BUNDLE/Contents/MacOS\"\nDXMT_RES=\"$APP_BUNDLE/Contents/Resources/dxmt\"\n# Export environment variables for consumers at build-time (also provided at runtime by launcher)\nexport WINEDLLPATH=\"$DXMT_RES\"\nexport DYLD_FALLBACK_LIBRARY_PATH=\"$DXMT_RES\"\n# Install launcher into app bundle and make executable\nmkdir -p \"$APP_BIN_DIR\"\ncp \"${PROJECT_DIR}/Brandywine/Scripts/dxmt-launcher.sh\" \"$APP_BIN_DIR/Brandywine-dxmt\"\nchmod +x \"$APP_BIN_DIR/Brandywine-dxmt\"\n";
+        };
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -143,8 +160,6 @@
         6E6C0CF12A419A6800356232 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
         6E6C0CF32A419A7600356232 /* RosettaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosettaView.swift; sourceTree = "<group>"; };
         6E6C0CF52A419A8300356232 /* BrewWineInstallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewWineInstallView.swift; sourceTree = "<group>"; };
-        A1B2C0D32A419A8300356233 /* GcenxWineDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GcenxWineDownloadView.swift; sourceTree = "<group>"; };
-        A1B2C0D42A419A8300356235 /* GcenxWineInstallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GcenxWineInstallView.swift; sourceTree = "<group>"; };
         6E70A4982A9A2197007799E9 /* BrandyCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BrandyCmd; sourceTree = BUILT_PRODUCTS_DIR; };
         6E70A49A2A9A2197007799E9 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
         6E70A4A02A9A280C007799E9 /* BrandyCmd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandyCmd.swift; sourceTree = "<group>"; };
@@ -375,8 +390,6 @@
                 6E6C0CF12A419A6800356232 /* WelcomeView.swift */,
                 6E6C0CF32A419A7600356232 /* RosettaView.swift */,
                 6E6C0CF52A419A8300356232 /* BrewWineInstallView.swift */,
-                A1B2C0D32A419A8300356233 /* GcenxWineDownloadView.swift */,
-                A1B2C0D42A419A8300356235 /* GcenxWineInstallView.swift */,
             );
             path = Setup;
             sourceTree = "<group>";
@@ -410,7 +423,6 @@
                 6E40494E29CCA19C006E3F1B /* Sources */,
                 6E40494F29CCA19C006E3F1B /* Frameworks */,
                 6E40495029CCA19C006E3F1B /* Resources */,
-                5BD97694D86041088DF2B44B /* DXVK-macOS: Install DLLs */,
                 6E50D98129CD0EAF008C39F6 /* SwiftLint */,
                 6E95F66C2AB3EF2F00D585D1 /* Embed BrandyCmd */,
                 6EFDF65A2AAE2DA800EF622F /* Embed Foundation Extensions */,
@@ -583,26 +595,7 @@
             );
             runOnlyForDeploymentPostprocessing = 0;
             shellPath = /bin/sh;
-            shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n    echo \"Running SwiftLint\"\n    swiftlint --strict\nelse\n    echo \"warning: SwiftLint not installed, skipping\"\nfi\n";
-        };
-        5BD97694D86041088DF2B44B /* DXVK-macOS: Install DLLs */ = {
-            isa = PBXShellScriptBuildPhase;
-            alwaysOutOfDate = 0;
-            buildActionMask = 2147483647;
-            files = (
-            );
-            inputFileListPaths = (
-            );
-            inputPaths = (
-            );
-            name = "DXVK-macOS: Install DLLs";
-            outputFileListPaths = (
-            );
-            outputPaths = (
-            );
-            runOnlyForDeploymentPostprocessing = 0;
-            shellPath = /bin/sh;
-            shellScript = "set -e\nAPP_BUNDLE=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}\"\n# Clean up old DXMT directory if present\nrm -rf \"$APP_BUNDLE/Contents/Resources/dxmt\"\nDXVK_RES=\"$APP_BUNDLE/Contents/Resources/dxvk-macos\"\nDXVK_SRC=\"${PROJECT_DIR}/Brandywine/Resources/dxvk-macos\"\nmkdir -p \"$DXVK_RES/x64\"\nmkdir -p \"$DXVK_RES/x32\"\ncp \"$DXVK_SRC/x64/\"*.dll \"$DXVK_RES/x64/\"\ncp \"$DXVK_SRC/x32/\"*.dll \"$DXVK_RES/x32/\"\ncp \"$DXVK_SRC/MoltenVK_icd.json\" \"$DXVK_RES/\"\ncp \"$DXVK_SRC/dxvk.conf\" \"$DXVK_RES/\"\n";
+            shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n    echo \"Running SwiftLint\"\n    swiftlint --strict\nelse\n    echo \"error: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n    exit -1\nfi\n";
         };
 /* End PBXShellScriptBuildPhase section */
 
@@ -630,8 +623,6 @@
                 6E17B6492AF4118F00831173 /* EnvironmentArgView.swift in Sources */,
                 6E6C0CF42A419A7600356232 /* RosettaView.swift in Sources */,
                 6E6C0CF62A419A8300356232 /* BrewWineInstallView.swift in Sources */,
-                A1B2C0D12A419A8300356231 /* GcenxWineDownloadView.swift in Sources */,
-                A1B2C0D22A419A8300356234 /* GcenxWineInstallView.swift in Sources */,
                 6365C4C12B1AA69D00AAE1FD /* Animation+Extensions.swift in Sources */,
                 6E40498329CCA91B006E3F1B /* Bottle+Extensions.swift in Sources */,
                 6E621CEF2A5F631300C9AAB3 /* Winetricks.swift in Sources */,

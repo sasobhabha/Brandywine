@@ -46,19 +46,21 @@ struct PinView: View {
             .opacity(opening ? 0 : 1)
             Spacer()
             Text(name)
-                .font(.system(size: 11, weight: .regular))
-                .foregroundStyle(BrandyTheme.accent)
                 .multilineTextAlignment(.center)
                 .lineLimit(2, reservesSpace: true)
         }
         .frame(width: 90, height: 90)
-        .padding(12)
-        .brandSurface(cornerRadius: 14)
-        .overlay(alignment: .topTrailing) {
-            Image(systemName: "play.fill")
-                .font(.system(size: 9, weight: .medium))
-                .foregroundStyle(BrandyTheme.accentMuted.opacity(0.6))
-                .padding(8)
+        .padding(10)
+        .overlay {
+            HStack {
+                Spacer()
+                Image(systemName: "play.fill")
+                    .resizable()
+                    .foregroundColor(.green)
+                    .frame(width: 16, height: 16)
+            }
+            .frame(width: 45, height: 45)
+            .padding(EdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 0))
         }
         .contextMenu {
             ProgramMenuView(program: program, path: $path)

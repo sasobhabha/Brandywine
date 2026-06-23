@@ -21,13 +21,10 @@ import SwiftUI
 enum SetupStage {
     case rosetta
     case brewWineInstall
-    case whiskyWineDownload
-    case whiskyWineInstall
 }
 
 struct SetupView: View {
     @State private var path: [SetupStage] = []
-    @State var tarLocation: URL = URL(fileURLWithPath: "")
     @Binding var showSetup: Bool
     var firstTime: Bool = true
 
@@ -42,17 +39,11 @@ struct SetupView: View {
                             RosettaView(path: $path, showSetup: $showSetup)
                         case .brewWineInstall:
                             BrewWineInstallView(path: $path, showSetup: $showSetup)
-                        case .whiskyWineDownload:
-                            GcenxWineDownloadView(tarLocation: $tarLocation, path: $path)
-                        case .whiskyWineInstall:
-                            GcenxWineInstallView(tarLocation: $tarLocation, path: $path, showSetup: $showSetup)
                         }
                     }
             }
         }
-        .padding(32)
-        .frame(minWidth: 420, minHeight: 280)
-        .background(BrandyTheme.surface)
+        .padding()
         .interactiveDismissDisabled()
     }
 }

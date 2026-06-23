@@ -20,16 +20,14 @@ import Foundation
 import os.log
 
 public class Wine {
-    private static var dxvkFolder: URL? {
-        Bundle.main.resourceURL?.appending(path: "dxvk-macos")
-    }
-    public static var wineBinary: URL {
-        WineBinaryResolver.executableURL(in: WhiskyWineInstaller.binFolder)
-    }
-    public static var wineCommandName: String {
-        WineBinaryResolver.commandName(in: WhiskyWineInstaller.binFolder)
-    }
+    /// URL to the installed `DXVK` folder
+    private static let dxvkFolder: URL = WhiskyWineInstaller.libraryFolder.appending(path: "DXVK")
+    /// Path to the `wine` binary
+    public static let wineBinary: URL = WhiskyWineInstaller.binFolder.appending(path: "wine")
+    /// Parth to the `wineserver` binary
     private static let wineserverBinary: URL = WhiskyWineInstaller.binFolder.appending(path: "wineserver")
+
+    /// Run a process on a executable file given by the `executableURL`
     private static func runProcess(
         name: String? = nil, args: [String], environment: [String: String], executableURL: URL, directory: URL? = nil,
         fileHandle: FileHandle?
@@ -40,10 +38,13 @@ public class Wine {
         process.currentDirectoryURL = directory ?? executableURL.deletingLastPathComponent()
         process.environment = environment
         process.qualityOfService = .userInitiated
+
         return try process.runStream(
             name: name ?? args.joined(separator: " "), fileHandle: fileHandle
         )
     }
+
+    /// Run a `wine` process with the given arguments and environment variables returning a stream of output
     private static func runWineProcess(
         name: String? = nil, args: [String], environment: [String: String] = [:],
         fileHandle: FileHandle?
@@ -54,6 +55,7 @@ public class Wine {
         )
     }
 
+    /// Run a `wineserver` process with the given arguments and environment variables returning a stream of output
     private static func runWineserverProcess(
         name: String? = nil, args: [String], environment: [String: String] = [:],
         fileHandle: FileHandle?
@@ -64,6 +66,7 @@ public class Wine {
         )
     }
 
+    /// Run a `wine` process with the given arguments and environment variables returning a stream of output
     public static func runWineProcess(
         name: String? = nil, args: [String], bottle: Bottle, environment: [String: String] = [:]
     ) throws -> AsyncStream<ProcessOutput> {
@@ -78,6 +81,7 @@ public class Wine {
         )
     }
 
+    /// Run a `wineserver` process with the given arguments and environment variables returning a stream of output
     public static func runWineserverProcess(
         name: String? = nil, args: [String], bottle: Bottle, environment: [String: String] = [:]
     ) throws -> AsyncStream<ProcessOutput> {
@@ -87,16 +91,17 @@ public class Wine {
 
         return try runWineserverProcess(
             name: name, args: args,
-            environment: constructWineEnvironment(for: bottle, environment: environment, includeSettings: false),
+            environment: constructWineServerEnvironment(for: bottle, environment: environment),
             fileHandle: fileHandle
         )
     }
 
+    /// Execute a `wine start /unix {url}` command returning the output result
     public static func runProgram(
         at url: URL, args: [String] = [], bottle: Bottle, environment: [String: String] = [:]
     ) async throws {
         if bottle.settings.dxvk {
-            try await enableDXVK(bottle: bottle)
+            try enableDXVK(bottle: bottle)
         }
 
         for await _ in try Self.runWineProcess(
@@ -141,6 +146,8 @@ public class Wine {
 
         return cmd
     }
+
+    /// Run a `wineserver` command with the given arguments and return the output result
     private static func runWineserver(_ args: [String], bottle: Bottle) async throws -> String {
         var result: [ProcessOutput] = []
 
@@ -159,14 +166,16 @@ public class Wine {
     }
 
     @discardableResult
+    /// Run a `wine` command with the given arguments and return the output result
     public static func runWine(
         _ args: [String], bottle: Bottle?, environment: [String: String] = [:]
     ) async throws -> String {
         var result: [String] = []
         let fileHandle = try makeFileHandle()
         fileHandle.writeApplicaitonInfo()
-            var environment = environment
-            if let bottle = bottle {
+        var environment = environment
+
+        if let bottle = bottle {
             fileHandle.writeInfo(for: bottle)
             environment = constructWineEnvironment(for: bottle, environment: environment)
         }
@@ -182,98 +191,86 @@ public class Wine {
 
         return result.joined()
     }
+
     public static func wineVersion() async throws -> String {
         var output = try await runWine(["--version"], bottle: nil)
         output.replace("wine-", with: "")
 
+        // Deal with WineCX version names
         if let index = output.firstIndex(where: { $0.isWhitespace }) {
             return String(output.prefix(upTo: index))
         }
         return output.trimmingCharacters(in: .whitespacesAndNewlines)
     }
+
     @discardableResult
     public static func runBatchFile(url: URL, bottle: Bottle) async throws -> String {
         return try await runWine(["cmd", "/c", url.path(percentEncoded: false)], bottle: bottle)
     }
+
     public static func killBottle(bottle: Bottle) throws {
         Task.detached(priority: .userInitiated) {
             try await runWineserver(["-k"], bottle: bottle)
         }
     }
-    public static func enableDXVK(bottle: Bottle) async throws {
-        guard let dxvkFolder else { return }
-        let fileManager = FileManager.default
-        // Copy DXVK DLLs into the bottle prefix
-        for (arch, dir) in [("x64", "system32"), ("x32", "syswow64")] {
-            let srcDir = dxvkFolder.appending(path: arch)
-            let dstDir = bottle.url.appending(path: "drive_c/windows").appending(path: dir)
-            guard fileManager.fileExists(atPath: srcDir.path) else { continue }
-            try fileManager.createDirectory(at: dstDir, withIntermediateDirectories: true)
-            let dlls = try fileManager.contentsOfDirectory(at: srcDir, includingPropertiesForKeys: nil)
-            for dll in dlls where dll.pathExtension == "dll" {
-                let dst = dstDir.appending(path: dll.lastPathComponent)
-                if fileManager.fileExists(atPath: dst.path) {
-                    try fileManager.removeItem(at: dst)
-                }
-                try fileManager.copyItem(at: dll, to: dst)
-            }
-        }
-        // Set DLL overrides so Wine loads DXVK DLLs instead of builtins
-        let overrides = ["d3d11", "d3d10core", "dxgi", "d3d9"]
-        for dll in overrides {
-            try await addRegistryKey(bottle: bottle, key: RegistryKey.dllOverrides.rawValue,
-                                    name: dll, data: "native,builtin", type: .string)
-        }
-        // Write MoltenVK ICD manifest with absolute path to libMoltenVK.dylib
-        let moltenVKLib = WhiskyWineInstaller.libraryFolder
-            .appending(path: "Wine").appending(path: "lib")
-            .appending(path: "libMoltenVK.dylib")
-        let icdJson: [String: Any] = [
-            "file_format_version": "1.0.0",
-            "ICD": [
-                "library_path": moltenVKLib.path,
-                "api_version": "1.2.0"
-            ]
-        ]
-        if JSONSerialization.isValidJSONObject(icdJson) {
-            let icdDir = bottle.url.appending(path: "drive_c/windows")
-            try fileManager.createDirectory(at: icdDir, withIntermediateDirectories: true)
-            let icdURL = icdDir.appending(path: "MoltenVK_icd.json")
-            let data = try JSONSerialization.data(withJSONObject: icdJson,
-                                                   options: [.prettyPrinted, .withoutEscapingSlashes])
-            try data.write(to: icdURL)
-        }
+
+    public static func enableDXVK(bottle: Bottle) throws {
+        try FileManager.default.replaceDLLs(
+            in: bottle.url.appending(path: "drive_c").appending(path: "windows").appending(path: "system32"),
+            withContentsIn: Wine.dxvkFolder.appending(path: "x64")
+        )
+        try FileManager.default.replaceDLLs(
+            in: bottle.url.appending(path: "drive_c").appending(path: "windows").appending(path: "syswow64"),
+            withContentsIn: Wine.dxvkFolder.appending(path: "x32")
+        )
     }
+
+    /// Construct an environment merging the bottle values with the given values
     private static func constructWineEnvironment(
-        for bottle: Bottle, environment: [String: String] = [:],
-        includeSettings: Bool = true
+        for bottle: Bottle, environment: [String: String] = [:]
     ) -> [String: String] {
         var result: [String: String] = [
             "WINEPREFIX": bottle.url.path,
             "WINEDEBUG": "fixme-all",
             "GST_DEBUG": "1"
         ]
-        if includeSettings {
-            bottle.settings.environmentVariables(wineEnv: &result)
-        }
+        bottle.settings.environmentVariables(wineEnv: &result)
+        guard !environment.isEmpty else { return result }
+        result.merge(environment, uniquingKeysWith: { $1 })
+        return result
+    }
+
+    /// Construct an environment merging the bottle values with the given values
+    private static func constructWineServerEnvironment(
+        for bottle: Bottle, environment: [String: String] = [:]
+    ) -> [String: String] {
+        var result: [String: String] = [
+            "WINEPREFIX": bottle.url.path,
+            "WINEDEBUG": "fixme-all",
+            "GST_DEBUG": "1"
+        ]
         guard !environment.isEmpty else { return result }
         result.merge(environment, uniquingKeysWith: { $1 })
         return result
     }
 }
+
 enum WineInterfaceError: Error {
     case invalidResponce
 }
+
 enum RegistryType: String {
     case binary = "REG_BINARY"
     case dword = "REG_DWORD"
     case qword = "REG_QWORD"
     case string = "REG_SZ"
 }
+
 extension Wine {
     public static let logsFolder = FileManager.default.urls(
         for: .libraryDirectory, in: .userDomainMask
     )[0].appending(path: "Logs").appending(path: Bundle.whiskyBundleIdentifier)
+
     public static func makeFileHandle() throws -> FileHandle {
         if !FileManager.default.fileExists(atPath: Self.logsFolder.path) {
             try FileManager.default.createDirectory(at: Self.logsFolder, withIntermediateDirectories: true)
@@ -291,8 +288,8 @@ extension Wine {
         case currentVersion = #"HKLM\Software\Microsoft\Windows NT\CurrentVersion"#
         case macDriver = #"HKCU\Software\Wine\Mac Driver"#
         case desktop = #"HKCU\Control Panel\Desktop"#
-        case dllOverrides = #"HKCU\Software\Wine\DllOverrides"#
     }
+
     private static func addRegistryKey(
         bottle: Bottle, key: String, name: String, data: String, type: RegistryType
     ) async throws {
@@ -301,6 +298,7 @@ extension Wine {
             bottle: bottle
         )
     }
+
     private static func queryRegistryKey(
         bottle: Bottle, key: String, name: String, type: RegistryType
     ) async throws -> String? {

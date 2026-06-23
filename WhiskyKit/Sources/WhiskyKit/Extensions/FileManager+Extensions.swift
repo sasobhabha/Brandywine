@@ -26,27 +26,27 @@ extension FileManager {
             at: sourceDirectory, includingPropertiesForKeys: [.isRegularFileKey])
 
         while let fileURL = enumerator?.nextObject() as? URL {
-            guard fileURL.pathExtension == "dll" else { continue }
+            guard fileURL.pathExtension == "dll" else { return }
             let originalURL = destinationDirectory.appending(path: fileURL.lastPathComponent)
             try FileManager.default.replaceFile(at: originalURL, with: fileURL, makeOriginalCopy: makeOriginalCopy)
         }
     }
 
     func replaceFile(at originalURL: URL, with replacementURL: URL, makeOriginalCopy: Bool = true) throws {
-        guard fileExists(atPath: replacementURL.path(percentEncoded: false)) else {
-            throw CocoaError(.fileNoSuchFile, userInfo: [NSFilePathErrorKey: replacementURL.path])
-        }
-        let exists = fileExists(atPath: originalURL.path(percentEncoded: false))
-        if makeOriginalCopy && exists {
-            let copyURL = originalURL.appendingPathExtension("orig")
-            if fileExists(atPath: copyURL.path(percentEncoded: false)) {
-                try FileManager.default.removeItem(at: copyURL)
+        if fileExists(atPath: originalURL.path(percentEncoded: false)) {
+            if makeOriginalCopy {
+                let copyURL = originalURL.appendingPathExtension("orig")
+
+                if fileExists(atPath: copyURL.path(percentEncoded: false)) {
+                    try FileManager.default.removeItem(at: copyURL)
+                }
+
+                try FileManager.default.moveItem(at: originalURL, to: copyURL)
+            } else {
+                try FileManager.default.removeItem(at: originalURL)
             }
-            try FileManager.default.copyItem(at: originalURL, to: copyURL)
+
+            try FileManager.default.copyItem(at: replacementURL, to: originalURL)
         }
-        if exists {
-            try FileManager.default.removeItem(at: originalURL)
-        }
-        try FileManager.default.copyItem(at: replacementURL, to: originalURL)
     }
 }

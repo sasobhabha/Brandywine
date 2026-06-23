@@ -38,9 +38,7 @@ struct WhiskyApp: App {
             ContentView(showSetup: $showSetup)
                 .frame(minWidth: ViewWidth.large, minHeight: 316)
                 .environmentObject(BottleVM.shared)
-                .tint(BrandyTheme.accent)
-                .preferredColorScheme(.light)
-                .brandAppBackground()
+                .tint(.brandAccent)
                 .onAppear {
                     NSWindow.allowsAutomaticWindowTabbing = false
 
