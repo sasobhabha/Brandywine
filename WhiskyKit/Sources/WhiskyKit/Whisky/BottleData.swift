@@ -44,8 +44,13 @@ public struct BottleData: Codable {
     public init() {
         fileVersion = Self.currentVersion
 
+        let fileExists = (try? Data(contentsOf: Self.bottleEntriesDir)) != nil
         if !decode() {
-            encode()
+            if !fileExists {
+                encode()
+            } else {
+                print("Warning: Failed to decode BottleVM.plist, preserving existing data")
+            }
         }
     }
 
@@ -62,6 +67,24 @@ public struct BottleData: Codable {
                 bottles.append(Bottle(bottleUrl: path, isAvailable: true))
             } else {
                 bottles.append(Bottle(bottleUrl: path))
+            }
+        }
+
+        // Recover orphaned bottles (directories with Metadata.plist not in paths)
+        let bottlesDir = Self.defaultBottleDir
+        if let contents = try? FileManager.default.contentsOfDirectory(
+            at: bottlesDir,
+            includingPropertiesForKeys: nil
+        ) {
+            for url in contents {
+                let metadataPath = url
+                    .appending(path: "Metadata")
+                    .appendingPathExtension("plist")
+                if FileManager.default.fileExists(atPath: metadataPath.path),
+                   !paths.contains(where: { $0.resolvingSymlinksInPath() == url.resolvingSymlinksInPath() }) {
+                    paths.append(url)
+                    bottles.append(Bottle(bottleUrl: url, isAvailable: true))
+                }
             }
         }
 
