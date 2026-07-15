@@ -52,11 +52,7 @@ public class WhiskyWineInstaller {
     }
 
     public static func isWhiskyWineInstalled() -> Bool {
-<<<<<<< HEAD
-        let winePath = binFolder.appending(path: "wine")
-        return FileManager.default.fileExists(atPath: winePath.path)
-=======
-        FileManager.default.isExecutableFile(
+        return FileManager.default.isExecutableFile(
             atPath: WineBinaryResolver.executableURL(in: binFolder).path
         )
     }
@@ -77,7 +73,6 @@ public class WhiskyWineInstaller {
         if from.path.contains(FileManager.default.temporaryDirectory.path) {
             try? FileManager.default.removeItem(at: from)
         }
->>>>>>> 018e1b6bdefc586f5ab82d431109efd0d2aa06ac
     }
 
     public static func isBrewInstalled() -> Bool {

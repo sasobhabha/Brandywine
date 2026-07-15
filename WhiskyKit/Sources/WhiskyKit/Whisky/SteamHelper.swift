@@ -103,9 +103,9 @@ public class SteamHelper {
             changed = true
         }
 
-        // Enable DXVK for Direct3D/Vulkan support
-        if !bottle.settings.dxvk {
-            bottle.settings.dxvk = true
+        // Disable DXVK to use D3DMetal for DX11
+        if bottle.settings.dxvk {
+            bottle.settings.dxvk = false
             changed = true
         }
 
@@ -118,38 +118,28 @@ public class SteamHelper {
     /// Apply critical registry optimizations for Steam
     /// These settings resolve common Steam compatibility issues on Wine 11.5
     private static func applySteamRegistryOptimizations(bottle: Bottle) async throws {
-        // Registry file paths
-        let registryPath = cDriveURL(for: bottle).appending(path: "windows/system32/config/user")
+        let regContent = """
+        Windows Registry Editor Version 5.00
 
-        // Critical registry settings for Steam compatibility:
-        // 1. CSMT (Command Stream MultiThreading) - enables multi-threaded rendering
-        // 2. DXVK settings for better compatibility
-        // 3. Direct3D threading optimizations
-        // 4. Steam-specific workarounds
+        [HKEY_CURRENT_USER\\Software\\Wine\\Direct3D]
+        "CSMT"="enabled"
+        "Renderer"="gl"
+        "VideoMemorySize"="4096"
 
-        // Note: In a production implementation, these would be applied via:
-        // - Wine registry editor (regedit)
-        // - Registry file manipulation
-        // - WINEREG environment variables
+        [HKEY_CURRENT_USER\\Software\\Wine\\Explorer\\Desktops]
+        "Default"="1920x1080"
 
-        // For now, document the recommended registry settings
-        let recommended = [
-            "[HKEY_CURRENT_USER\\Software\\Wine\\Direct3D]",
-            "\"CSMT\"=\"enabled\"",
-            "\"Renderer\"=\"gl\"",
-            "\"VideoMemorySize\"=\"4096\"",
-            "",
-            "[HKEY_CURRENT_USER\\Software\\Wine\\Explorer\\Desktops]",
-            "\"Default\"=\"1920x1080\"",
-            "",
-            "[HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver]",
-            "\"Managed\"=\"Y\"",
-            "\"Decorated\"=\"Y\"",
-            "",
-            "These settings are automatically applied when using the Steam optimization."
-        ]
+        [HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver]
+        "Managed"="Y"
+        "Decorated"="Y"
+        """
+        let tempDir = FileManager.default.temporaryDirectory
+        let tempFile = tempDir.appendingPathComponent("steam_\(UUID().uuidString).reg")
+        try regContent.write(to: tempFile, atomically: true, encoding: .utf8)
 
-        _ = recommended.joined(separator: "\n")
+        let regArgs = ["regedit", "/S", tempFile.path(percentEncoded: false)]
+        _ = try await Wine.runWine(regArgs, bottle: bottle)
+        try? FileManager.default.removeItem(at: tempFile)
     }
 
     /// Get detailed Steam optimization status

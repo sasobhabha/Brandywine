@@ -86,7 +86,8 @@ struct GcenxWineDownloadView: View {
                 }
 
                 if let url: URL = URL(string: BrandyTheme.wineStagingDownloadURL) {
-                    downloadTask = URLSession(configuration: .ephemeral).downloadTask(with: url) { url, response, error in
+                    downloadTask = URLSession(configuration: .ephemeral)
+                        .downloadTask(with: url) { url, response, error in
                         Task.detached {
                             await MainActor.run {
                                 if let url = url {

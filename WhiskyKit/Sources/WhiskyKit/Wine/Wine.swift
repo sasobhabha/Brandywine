@@ -1,6 +1,6 @@
 //
 //  Wine.swift
-//  Whisky
+//  WhiskyKit
 //
 //  This file is part of Whisky.
 //
@@ -16,6 +16,7 @@
 //  If not, see https://www.gnu.org/licenses/.
 //
 
+// swiftlint:disable file_length
 import Foundation
 import os.log
 
@@ -102,6 +103,8 @@ public class Wine {
     ) async throws {
         if bottle.settings.dxvk {
             try enableDXVK(bottle: bottle)
+        } else {
+            try enableD3DMetal(bottle: bottle)
         }
 
         for await _ in try Self.runWineProcess(
@@ -225,6 +228,23 @@ public class Wine {
         )
     }
 
+    public static func enableD3DMetal(bottle: Bottle) throws {
+        // Find redist in Brandywine folder (or fallback to bundle if built into app)
+        let rootBundle = Bundle.main.bundleURL.deletingLastPathComponent().deletingLastPathComponent()
+        let bundleRedist = rootBundle.appending(path: "redist")
+        let sourceRedist = URL(fileURLWithPath: "/Users/shashwath/Brandywine/redist")
+        let redistFolder = FileManager.default.fileExists(atPath: bundleRedist.path) ? bundleRedist : sourceRedist
+
+        let sourceDlls = redistFolder.appending(path: "lib/wine/x86_64-windows")
+        let destSystem32 = bottle.url.appending(path: "drive_c/windows/system32")
+
+        try FileManager.default.replaceDLLs(
+            in: destSystem32,
+            withContentsIn: sourceDlls,
+            makeOriginalCopy: true
+        )
+    }
+
     /// Construct an environment merging the bottle values with the given values
     private static func constructWineEnvironment(
         for bottle: Bottle, environment: [String: String] = [:]
@@ -234,6 +254,33 @@ public class Wine {
             "WINEDEBUG": "fixme-all",
             "GST_DEBUG": "1"
         ]
+
+        if !bottle.settings.dxvk {
+            let rootBundle = Bundle.main.bundleURL.deletingLastPathComponent().deletingLastPathComponent()
+            let bundleRedist = rootBundle.appending(path: "redist")
+            let sourceRedist = URL(fileURLWithPath: "/Users/shashwath/Brandywine/redist")
+            let redistFolder = FileManager.default.fileExists(atPath: bundleRedist.path) ? bundleRedist : sourceRedist
+            let externalPath = redistFolder.appending(path: "lib/external").path
+            if let existing = result["DYLD_FALLBACK_LIBRARY_PATH"] {
+                // swiftlint:disable:next line_length
+                result["DYLD_FALLBACK_LIBRARY_PATH"] = "\(externalPath):\(WhiskyWineInstaller.libraryFolder.appending(path: "Wine/lib").path):\(existing)"
+            } else {
+                // swiftlint:disable:next line_length
+                result["DYLD_FALLBACK_LIBRARY_PATH"] = "\(externalPath):\(WhiskyWineInstaller.libraryFolder.appending(path: "Wine/lib").path):/usr/lib:/usr/local/lib"
+            }
+            let wineDllPath = redistFolder.appending(path: "lib/wine/x86_64-unix").path
+            if let existing = result["WINEDLLPATH"] {
+                result["WINEDLLPATH"] = "\(wineDllPath):\(existing)"
+            } else {
+                result["WINEDLLPATH"] = wineDllPath
+            }
+            if let existing = result["DYLD_FRAMEWORK_PATH"] {
+                result["DYLD_FRAMEWORK_PATH"] = "\(externalPath):\(existing)"
+            } else {
+                result["DYLD_FRAMEWORK_PATH"] = externalPath
+            }
+        }
+
         bottle.settings.environmentVariables(wineEnv: &result)
         guard !environment.isEmpty else { return result }
         result.merge(environment, uniquingKeysWith: { $1 })

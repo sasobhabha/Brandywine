@@ -54,7 +54,7 @@ public enum GcenxWine {
 
         let destinationWine = libraryFolder.appending(path: "Wine")
         if fileManager.fileExists(atPath: destinationWine.path) {
-            try fileManager.removeItem(at: destinationWine)
+            try fileManager.removeItem(at: destinationWine)kkkk
         }
 
         try fileManager.copyItem(at: wineRoot, to: destinationWine)

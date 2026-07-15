@@ -291,6 +291,8 @@ public struct BottleSettings: Codable, Equatable {
             case .off:
                 break
             }
+        } else {
+            wineEnv.updateValue("dxgi,d3d9,d3d10core,d3d11,d3d12=n,b", forKey: "WINEDLLOVERRIDES")
         }
 
         if dxvkAsync {
